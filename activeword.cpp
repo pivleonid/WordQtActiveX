@@ -24,13 +24,18 @@ void ActiveWord::documentActive(QAxObject *document){
 }
 //----------------------------------------------------------
 QAxObject* ActiveWord::documentOpen(bool template_){
-  if (template_)
+  if (!template_)
     return documents_->querySubObject("Add()");
-  if(!template_)
-   return  documents_->querySubObject("Add(D:\\testdot.dot)");
+  return  documents_->querySubObject("Add(D:\\testdot.dot)");
 }
 //----------------------------------------------------------
-QAxObject* ActiveWord::selectionFind( QString oldString , QString newString
+QAxObject* ActiveWord::documentOpen(bool template_, QVariant path){
+  if (!template_)
+    return documents_->querySubObject("Add()");
+  return  documents_->querySubObject("Add(const QVariant &)", path);
+}
+//----------------------------------------------------------
+QVariant ActiveWord::selectionFind( QString oldString , QString newString
                          ,bool searchReg, bool searchAllWord, bool searchForward
                          , bool searchFormat, bool clearFormatting, int replace ){
 
@@ -55,8 +60,9 @@ QAxObject* ActiveWord::selectionFind( QString oldString , QString newString
     params.operator << (QVariant(false)); //облако пафоса
     params.operator << (QVariant(false)); //облако пафоса
     params.operator << (QVariant(false)); //облако пафоса
+    QVariant param;
 
-    findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
+    param =    findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,"
@@ -64,86 +70,95 @@ QAxObject* ActiveWord::selectionFind( QString oldString , QString newString
                       "const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,const QVariant&)",
                       params);
-    return findString;
+
+    return param;
 }
 //----------------------------------------------------------
-QAxObject* ActiveWord::selectionFindReplaseAll(QString oldString, QString newString, bool allText)
+bool ActiveWord::selectionFindAndPasteBuffer(QAxObject *document1, QAxObject *document2, QString findLabel){
+  //проверить наличие метки
+  documentActive(document2);
+  if (selectionFind(findLabel, findLabel, false, false, true, false, true, 0) == false)
+    return false;
+  documentActive(document1);
+  selectionCopyAllText(true);
+  documentActive(document2);
+  selectionFind(findLabel, "", false, false, true, false, true, 0);
+  selectionPasteTextFromBuffer();
+  return true;
+}
+
+//----------------------------------------------------------
+QVariant ActiveWord::selectionFindReplaseAll(QString oldString, QString newString, bool allText)
 {
   if(allText)
     return  selectionFind( oldString, newString,false,false,true,false, true, 2 );
-  if(!allText)
-    return selectionFind( oldString, newString,false,false,true,false, true, 1 );
+  return selectionFind( oldString, newString,false,false,true,false, true, 1 );
 
 }
 
 //----------------------------------------------------------
-QAxObject* ActiveWord::selectionFindColor(QString string, QVariant color, bool allText){
-    QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-    QAxObject* findString =  wordSelection->querySubObject("Find"); // заменить в одну строчку
+QVariant ActiveWord::selectionFindColor(QString string, QVariant color, bool allText){
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+  QAxObject* findString =  wordSelection->querySubObject("Find"); // заменить в одну строчку
 
-    findString->dynamicCall("ClearFormatting()");
-    //получаем доступ к параметрам для замены
-    QAxObject* replacement = findString->querySubObject("Replacement");
-    //Доступ к шрифту для замены
-    QAxObject* font = replacement->querySubObject("Font()");
-    font->setProperty("ColorIndex", color); //например wdBlue
-    if(allText)
+  findString->dynamicCall("ClearFormatting()");
+  //получаем доступ к параметрам для замены
+  QAxObject* replacement = findString->querySubObject("Replacement");
+  //Доступ к шрифту для замены
+  QAxObject* font = replacement->querySubObject("Font()");
+  font->setProperty("ColorIndex", color); //например wdBlue
+  if(allText)
     return selectionFind( string, string,false,false,true,true, true, 2 );
-    if(!allText)
-     return selectionFind( string, string,false,false,true,true, true, 1 );
-    }
-//----------------------------------------------------------
-QAxObject* ActiveWord:: selectionFindSize(QString string, QVariant fontSize, bool allText){
-    QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-    QAxObject* findString =  wordSelection->querySubObject("Find"); // заменить в одну строчку
-    findString->dynamicCall("ClearFormatting()");
-    //получаем доступ к параметрам для замены
-    QAxObject* replacement = findString->querySubObject("Replacement");
-    //Доступ к шрифту для замены
-    QAxObject* font = replacement->querySubObject("Font()");
-    font->setProperty("Size", fontSize);
-    if(allText)
-        return selectionFind( string, string,false,false,true,true, true, 2 );
-    if(!allText)
-        return selectionFind( string, string,false,false,true,true, true, 1 );
+  return selectionFind( string, string,false,false,true,true, true, 1 );
 }
 //----------------------------------------------------------
-QAxObject* ActiveWord:: selectionFindFontname(QString string,  bool allText, bool bold,
-                         bool italic , bool underline, QString fontName )
-{
-  QAxObject* wordSelection = worgdApplication_->querySubObject("Selection");
+QVariant ActiveWord:: selectionFindSize(QString string, QVariant fontSize, bool allText){
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
   QAxObject* findString =  wordSelection->querySubObject("Find"); // заменить в одну строчку
   findString->dynamicCall("ClearFormatting()");
-    //получаем доступ к параметрам для замены
-    QAxObject* replacement = findString->querySubObject("Replacement");
-    //Доступ к шрифту для замены
-    QAxObject* font = replacement->querySubObject("Font()");
-    font->setProperty("Bold", bold);
-    font->setProperty("Italic", italic);
-    if(underline)
-      font->setProperty("Underline", "wdUnderlineSingle");
-    if(!underline)
-      font->setProperty("Underline", "wdUnderlineNone");
-    font->setProperty("Name", fontName);
-    if(allText)
-        return selectionFind( string, string,false,false,true,true, true, 2 );
-    if(!allText)
-        return  selectionFind( string, string,false,false,true,true, true, 1 );
+  //получаем доступ к параметрам для замены
+  QAxObject* replacement = findString->querySubObject("Replacement");
+  //Доступ к шрифту для замены
+  QAxObject* font = replacement->querySubObject("Font()");
+  font->setProperty("Size", fontSize);
+  if(allText)
+    return selectionFind( string, string,false,false,true,true, true, 2 );
+  return selectionFind( string, string,false,false,true,true, true, 1 );
+}
+//----------------------------------------------------------
+QVariant ActiveWord:: selectionFindFontname(QString string,  bool allText, bool bold,
+                                              bool italic , bool underline, QString fontName )
+{
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+  QAxObject* findString =  wordSelection->querySubObject("Find"); // заменить в одну строчку
+  findString->dynamicCall("ClearFormatting()");
+  //получаем доступ к параметрам для замены
+  QAxObject* replacement = findString->querySubObject("Replacement");
+  //Доступ к шрифту для замены
+  QAxObject* font = replacement->querySubObject("Font()");
+  font->setProperty("Bold", bold);
+  font->setProperty("Italic", italic);
+  if(underline)
+    font->setProperty("Underline", "wdUnderlineSingle");
+  if(!underline)
+    font->setProperty("Underline", "wdUnderlineNone");
+  font->setProperty("Name", fontName);
+  if(allText)
+    return selectionFind( string, string,false,false,true,true, true, 2 );
+  return  selectionFind( string, string,false,false,true,true, true, 1 );
 }
 //-----------------Возвращает указатель на объект типа selection
-QAxObject* ActiveWord:: selectionCopyAllText( bool buffer){
+void ActiveWord:: selectionCopyAllText( bool buffer){
     QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-    wordSelection->dynamicCall("WholeStory()");
+    wordSelection->dynamicCall("WholeStory()");//выделение всего
     if(buffer)
-      wordSelection->dynamicCall("Copy()");
-    return wordSelection;
+      wordSelection->dynamicCall("Copy()");//копирование выделенного в буфер обмена
 }
 
 //------------------Вставка текста из буфера
-QAxObject* ActiveWord:: selectionPasteTextFromBuffer(QAxObject* wordSelection){
+void ActiveWord:: selectionPasteTextFromBuffer(){
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
   wordSelection->dynamicCall("Paste()");
-  return wordSelection;
-
 }
 //----------------------------------------------------------
 void ActiveWord::documentClose(bool save, QAxObject* document){

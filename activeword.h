@@ -20,6 +20,14 @@ class ActiveWord{
 
   QAxObject* wordApplication_; ///< файл ворда
   QAxObject* documents_;       ///< Коллекция документов
+  //Внутренняя функция.
+  QVariant selectionFind( QString oldString = "", QString newString = ""   /*!< [in] Старая строкаи строка для замены   */
+      ,bool searchReg     = false                      /*!< [in] Учитывать регистр   */
+      ,bool searchAllWord = false                      /*!< [in] Поиск целого слова  */
+      ,bool searchForward = true                       /*!< [in] поиск вперед   */
+      ,bool searchFormat  = true                       /*!< [in] Применить форматирование   */
+      ,bool clearFormatting = true                     /*!< [in] Очистка предыдущего форматирования   */
+      ,int replace = 2  );                             /*!< [in] 0- без замен, 1 = замена первого вхождения, 2 -замена всего   */
 
 public:
   /*==================================================================*/
@@ -37,6 +45,10 @@ public:
   \return документ.
   */
   QAxObject* documentOpen( bool template_ );
+
+  QAxObject* documentOpen( bool template_,
+                           QVariant path /*!< [in] D:\\template1.docx   */
+                           );
   /*==================================================================*/
   /*!  \brief
   документ должен быть создан или сохранен функцией documentSave(...);
@@ -73,23 +85,21 @@ public:
   //----------------------------------------------------------
   /*==================================================================*/
   /*!  \brief
-   Выбор меток
-  \return метку
+   Вставка всего текста из первого документа в метку второго документа
+  \return true- метка есть и замена произведена, false метка в исходном
+  документе не обнаружена
   */
-  QAxObject* selectionFind( QString oldString = "", QString newString = ""   /*!< [in] Старая строкаи строка для замены   */
-      ,bool searchReg     = false                      /*!< [in] Учитывать регистр   */
-      ,bool searchAllWord = false                      /*!< [in] Поиск целого слова  */
-      ,bool searchForward = true                       /*!< [in] поиск вперед   */
-      ,bool searchFormat  = true                       /*!< [in] Применить форматирование   */
-      ,bool clearFormatting = true                     /*!< [in] Очистка предыдущего форматирования   */
-      ,int replace = 2  );                             /*!< [in] 0- без замен, 1 = замена первого вхождения, 2 -замена всего   */
+  bool selectionFindAndPasteBuffer( QAxObject* document1,/*!< [in] Документ 1  */
+                                  QAxObject* document2,/*!< [in] Документ 2  */
+                                  QString findLabel    /*!< [in] Метка для вставки  */
+                                  );
 
   /*==================================================================*/
   /*!  \brief
    Замена всех меток или только первой
   \return метку
   */
-  QAxObject* selectionFindReplaseAll(QString oldString, QString newString,
+QVariant selectionFindReplaseAll(QString oldString, QString newString,
                                      bool allText  /*!< [in] Замена всех меток  */
                                      );
   //----------------------------------------------------------
@@ -107,7 +117,7 @@ public:
   \param [in] allText - замена всех меток
   \return тип selection
   */
-  QAxObject* selectionFindColor(QString string, QVariant color, bool allText);
+QVariant selectionFindColor(QString string, QVariant color, bool allText);
   /*==================================================================*/
   /*!  \brief
   Замена размера шрифта
@@ -116,7 +126,7 @@ public:
   \param [in] allText - замена всех меток
   \return тип selection
   */
-  QAxObject* selectionFindSize(QString string, QVariant fontSize, bool allText);
+QVariant selectionFindSize(QString string, QVariant fontSize, bool allText);
   /*==================================================================*/
   /*!  \brief
   Замена типа шрифтa: Жирный,курсив, подчеркнутый + замена темы
@@ -125,7 +135,7 @@ public:
   \param [in] FontName - "Times New Roman" по умолчанию
   \return тип selection
   */
-  QAxObject* selectionFindFontname(QString string,  bool allText,bool bold = false,
+QVariant selectionFindFontname(QString string,  bool allText,bool bold = false,
                                    bool italic = false, bool underline = false, QString FontName = "Times New Roman");
   /*==================================================================*/
   /*!  \brief
@@ -133,14 +143,14 @@ public:
   \param [in] buffer - false- выделяю весь текст. true- и копирую его в буфер
   \return тип selection
   */
-  QAxObject* selectionCopyAllText(bool buffer);
+void selectionCopyAllText(bool buffer);
   /*==================================================================*/
   /*!  \brief
  Вставка теста из буфера
   \param [in] wordSelection - выделенный текст
   \return тип selection
   */
-  QAxObject* selectionPasteTextFromBuffer(QAxObject* wordSelection);// выделенный текст
+  void selectionPasteTextFromBuffer(void);// выделенный текст
 };
   /*
 /-- Пример выделения всего текста, копирования его в буфер, а также

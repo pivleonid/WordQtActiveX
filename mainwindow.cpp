@@ -39,13 +39,20 @@ MainWindow::MainWindow(QWidget *parent) :
 // // document1->querySubObject("SaveAs()", "D:\\test.docx");
 //   // disconnectWord(word);
 
+//  ActiveWord word;
+
+// QAxObject* document1 = word.documentOpen(true);
+// QAxObject* document2 = word.documentOpen(false);
+
+
+
   ActiveWord word;
-
- QAxObject* document1 = word.documentOpen(true);
- QAxObject* document2 = word.documentOpen(false);
-
-int i;
-i++;
+  QAxObject* doc1 = word.documentOpen(true,"D:\\template1.docx");
+  QAxObject* doc2 = word.documentOpen(true,"D:\\template2.docx");
+  bool return_;
+  return_ = word.selectionFindAndPasteBuffer(doc2,doc1, "LABEL");
+  int i;
+  i++;
 }
 
 MainWindow::~MainWindow()
