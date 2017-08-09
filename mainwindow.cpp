@@ -58,10 +58,10 @@ MainWindow::MainWindow(QWidget *parent) :
   {
   QStringList temp;
   for(uint j = 0; j < 10; j++)
-  temp.append( "a" + QString::number(j) );
+  temp.append( "a* "  /*QString::number(j)*/ );
   table.append(temp);
   }
-  word.tablePaste(table);
+  QVariant j = word.tablePaste(table, "*");
   int i;
   i++;
 }

@@ -165,7 +165,7 @@ void selectionCopyAllText(bool buffer);
   /*!  \brief
   Вставка текста и преобразование его в таблицу
   */
-  void tablePaste(QList<QStringList> table);
+  QVariant tablePaste(QList<QStringList> table, QVariant separator);
 };
 
 /*==================================================================*/

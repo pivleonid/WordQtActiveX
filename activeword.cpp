@@ -200,17 +200,44 @@ void ActiveWord::documentSave(QAxObject *document, QString fileName,
 }
 //----------------------------------------------------------
 //----------------------------------------------------------
-void ActiveWord::tablePaste(QList<QStringList> table){
-  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
- uint numRows = table.count();
- uint numColumn = table[0].count();
+QVariant ActiveWord::tablePaste(QList<QStringList> table, QVariant separator ){
+  wordApplication_->setProperty("DefaultTableSeparator(const QVariant&)", separator);
+
+ int numRows = table.count();
+ int numColumn = table[0].count();
  for( uint i =0 ; i < numRows; i++)
    for(uint j = 0; j < numColumn; j++){
-       QVariant variantTable( table[i][j] + "\t") ;
+       QVariant variantTable( table[i][j] ) ;
 
-       wordSelection->dynamicCall("TypeText(const QVariant&)", variantTable);
+       ActiveWord::selectionPasteText(variantTable);
      }
+  //создание таблицы
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+   wordSelection->dynamicCall("WholeStory()");
+    QList<QVariant> params;//Все параметры не обязательные!
+    params.operator << (QVariant(3));//[Separator]
+    params.operator << (QVariant(numRows));//[NumRows]
+    params.operator << (QVariant(numColumn));//[NumColumns]
+    params.operator << (QVariant(false));// [InitialColumnWidth]
+    //
+    params.operator << (QVariant(0));                 //[Format]
+    params.operator << (QVariant(true));               //  [ApplyBorders]
+    params.operator << (QVariant(false));               //[ApplyShading]
+    params.operator << (QVariant(true));             //[ApplyFont]
+    params.operator << (QVariant(true));         //[ApplyColor]
+    //
+    params.operator << (QVariant(true));       //[ApplyHeadingRows]
+    params.operator << (QVariant(false));      //[ApplyLastRow]
+    params.operator << (QVariant(true));       // [ApplyFirstColumn]
+    //
+    params.operator << (QVariant(false));                  //[ApplyLastColumn]
+    params.operator << (QVariant(true));                    //[AutoFit]
+    params.operator << (QVariant(1));      //[AutoFitBehavior]
+    params.operator << (QVariant(1));//[DefaultTableBehavior]
+    QVariant param;
 
+    param =    wordSelection->dynamicCall("ConvertToTable(const QVariant&,const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&)", params);
+    return param;
 }
 //----------------------------------------------------------
 void ActiveWord::selectionPasteText(QVariant string){
