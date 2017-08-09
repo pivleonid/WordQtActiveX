@@ -199,3 +199,21 @@ void ActiveWord::documentSave(QAxObject *document, QString fileName,
     document -> dynamicCall("SaveAs2(const QVariant&)", param);
 }
 //----------------------------------------------------------
+//----------------------------------------------------------
+void ActiveWord::tablePaste(QList<QStringList> table){
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+ uint numRows = table.count();
+ uint numColumn = table[0].count();
+ for( uint i =0 ; i < numRows; i++)
+   for(uint j = 0; j < numColumn; j++){
+       QVariant variantTable( table[i][j] + "\t") ;
+
+       wordSelection->dynamicCall("TypeText(const QVariant&)", variantTable);
+     }
+
+}
+//----------------------------------------------------------
+void ActiveWord::selectionPasteText(QVariant string){
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+  wordSelection->dynamicCall("TypeText(const QVariant&)", string);
+}

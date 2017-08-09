@@ -89,6 +89,13 @@ public:
   \return true- метка есть и замена произведена, false метка в исходном
   документе не обнаружена
   */
+  void selectionPasteText(QVariant string);
+  /*==================================================================*/
+  /*!  \brief
+   Вставка всего текста из первого документа в метку второго документа
+  \return true- метка есть и замена произведена, false метка в исходном
+  документе не обнаружена
+  */
   bool selectionFindAndPasteBuffer( QAxObject* document1,/*!< [in] Документ 1  */
                                   QAxObject* document2,/*!< [in] Документ 2  */
                                   QString findLabel    /*!< [in] Метка для вставки  */
@@ -151,7 +158,17 @@ void selectionCopyAllText(bool buffer);
   \return тип selection
   */
   void selectionPasteTextFromBuffer(void);// выделенный текст
+//----------------------------------------------------------
+/*! \brief Операции c таблицами*/
+//----------------------------------------------------------
+  /*==================================================================*/
+  /*!  \brief
+  Вставка текста и преобразование его в таблицу
+  */
+  void tablePaste(QList<QStringList> table);
 };
+
+/*==================================================================*/
   /*
 /-- Пример выделения всего текста, копирования его в буфер, а также
 /--  поиск метки и вставка на ее место текста из буфера
@@ -177,6 +194,13 @@ selection->dynamicCall("TypeText(Hellllllo)");
 QAxObject *selection = word->querySubObject("Selection");
 selection->dynamicCall("TypeText(adasdasdasdasd)");
 saveDocument(document, "Word",".docx", "D:\\");
- */
+/--------------------------------------------------------------/
+/*  Копирование текста из документа в метку другого документа
+  ActiveWord word;
+  QAxObject* doc1 = word.documentOpen(true,"D:\\template1.docx");
+  QAxObject* doc2 = word.documentOpen(true,"D:\\template2.docx");
+  bool return_;
+  return_ = word.selectionFindAndPasteBuffer(doc2,doc1, "LABEL");*/
+
 
 #endif // ACTIVEWORD_H
