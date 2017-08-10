@@ -50,22 +50,13 @@ MainWindow::MainWindow(QWidget *parent) :
 //   QVariant param;
 
 //   param =    wordSelection->dynamicCall("ConvertToTable(const QVariant&,const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&)", params);
+
+
   ActiveWord word;
-  word.documentOpen(false);
+  word.documentOpen(true, "D:\\Freq.docx");
+  word.tableGetLabels(2);
 
-  QList<QStringList> table;
-  for( uint i =0 ; i < 10; i++)
-  {
-  QStringList temp;
-  for(uint j = 0; j < 10; j++)
-  temp.append( "a* "  /*QString::number(j)*/ );
-  table.append(temp);
-  }
-  QVariant j = word.tablePaste(table, "*");
-  int i;
-  i++;
 }
-
 MainWindow::~MainWindow()
 {
   delete ui;

@@ -35,6 +35,11 @@ QAxObject* ActiveWord::documentOpen(bool template_, QVariant path){
   return  documents_->querySubObject("Add(const QVariant &)", path);
 }
 //----------------------------------------------------------
+void ActiveWord::selectionPasteText(QVariant string){
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+  wordSelection->dynamicCall("TypeText(const QVariant&)", string);
+}
+//----------------------------------------------------------
 QVariant ActiveWord::selectionFind( QString oldString , QString newString
                          ,bool searchReg, bool searchAllWord, bool searchForward
                          , bool searchFormat, bool clearFormatting, int replace ){
@@ -161,11 +166,8 @@ void ActiveWord:: selectionPasteTextFromBuffer(){
   wordSelection->dynamicCall("Paste()");
 }
 //----------------------------------------------------------
-void ActiveWord::documentClose(bool save, QAxObject* document){
-    if(!save)
+void ActiveWord::documentClose(QAxObject* document){
         document->dynamicCall("Close(wdDoNotSaveChanges)");
-    if(save)
-        document->dynamicCall("Close(wdSaveChanges)");
 }
 //----------------------------------------------------------
 void ActiveWord::documentIndexClose(QAxObject* index, bool save){
@@ -239,8 +241,22 @@ QVariant ActiveWord::tablePaste(QList<QStringList> table, QVariant separator ){
     param =    wordSelection->dynamicCall("ConvertToTable(const QVariant&,const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&)", params);
     return param;
 }
-//----------------------------------------------------------
-void ActiveWord::selectionPasteText(QVariant string){
-  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-  wordSelection->dynamicCall("TypeText(const QVariant&)", string);
+
+QStringList ActiveWord::tableGetLabels(int tableIndex){
+   QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+   QAxObject* tables = act->querySubObject("Tables");
+   //индекс указывает на искомую таблицу
+   QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
+   int tabColumns = table->querySubObject("Columns")->dynamicCall("count").toInt();
+   QVariant tabRow = table->querySubObject("Rows")->dynamicCall("count");//.toInt();
+   QStringList lable;
+   for(int i = 0; i <= tabColumns; i++){
+       QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",tabRow, i );
+       QVariant str_v = cell->querySubObject("Range")->dynamicCall("Text");
+       QString str = str_v.toString();
+       int index = str.indexOf("]", 0 );
+       str = str.mid(0, index+1);
+       lable << str;
+     }
+return lable;
 }

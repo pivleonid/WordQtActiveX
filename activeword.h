@@ -51,11 +51,10 @@ public:
                            );
   /*==================================================================*/
   /*!  \brief
-  документ должен быть создан или сохранен функцией documentSave(...);
+   Закрытие документа без возможности его сохранения
   \param [in] document - открытый документ
-  \param [in] save - сорхранить документ? .
   */
-  void documentClose(bool save, QAxObject* document);
+  void documentClose(QAxObject* document);
   /*==================================================================*/
   /*!  \brief
   документ должен быть создан или сохранен функцией documentSave(...);
@@ -166,6 +165,21 @@ void selectionCopyAllText(bool buffer);
   Вставка текста и преобразование его в таблицу
   */
   QVariant tablePaste(QList<QStringList> table, QVariant separator);
+  /*==================================================================*/
+  /*!  \brief
+  Возвращает количество и список меток в таблице.
+  */
+  void tableGetLabels(int tableIndex);
+  /*==================================================================*/
+  /*!  \brief
+  Возвращает количество и список меток в таблице.
+  */
+  //QStringList tableGetLabels(int tableIndex);
+  /*==================================================================*/
+  /*!  \brief
+  Возвращает количество и список меток в таблице.
+  */
+  //void tableFill()//?
 };
 
 /*==================================================================*/
@@ -201,6 +215,11 @@ saveDocument(document, "Word",".docx", "D:\\");
   QAxObject* doc2 = word.documentOpen(true,"D:\\template2.docx");
   bool return_;
   return_ = word.selectionFindAndPasteBuffer(doc2,doc1, "LABEL");*/
+//------------------------------------------------------------/
+/*Ежели параметров больше 8, то можно воспользоваться преобразованием
+ QAxObject* table = tables->querySubObject(QString("Item(%1)").arg( tableIndex).toStdString().c_str());
+ %1 первый аргумент. toStdString преобразование в строку, c_str() преобразование в массив char
 
+*/
 
 #endif // ACTIVEWORD_H
