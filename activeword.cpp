@@ -288,7 +288,7 @@ for(int i = 0; i < tabColumns; i++)
 QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
 const int count = tableDat_in.count();
 int start = 0; //стартовый индекс номера строки
-for(int i = 0; i <= count; i++){
+for(int i = 1; i <= count; i++){
 
   for(int j = 1; j <= tabColumns; j++){
       if(i != 0)// && i != count)          //первая строчка
@@ -300,7 +300,10 @@ for(int i = 0; i <= count; i++){
         ad = tableDat_in.at(i).at(j-1);
       //добавление данных
      QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start, j);
-     cell->querySubObject("Range")->dynamicCall("InfertAfter(Text )", "sdfsdfsd");//dynamicCall("Text(const QVariant&)", tableDat_in.at(i).at(j));
+       //cell->querySubObject("Range")->dynamicCall("Select()");
+   cell->querySubObject("Range")->dynamicCall("InsertAfter(const QVariant&)", tableDat_in.at(i).at(j-1));
+
+    // cell->setProperty("Value(sdfsdf)", "sdfsdfsd");//dynamicCall("Text(const QVariant&)", tableDat_in.at(i).at(j));
 
     }
 }
