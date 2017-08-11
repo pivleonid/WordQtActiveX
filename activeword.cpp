@@ -287,19 +287,23 @@ for(int i = 0; i < tabColumns; i++)
 
 QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
 const int count = tableDat_in.count();
-int start = 0;
-for(int i = 0; i < count; i++)
-  for(int j = 0; i < tabColumns; j++){
-      if(i != 0 && i != count)          //первая строчка
-           ActiveWord::tableAddLine(table, 1);//добавляю строчку
+int start = 0; //стартовый индекс номера строки
+for(int i = 0; i <= count; i++){
+
+  for(int j = 1; j <= tabColumns; j++){
+      if(i != 0)// && i != count)          //первая строчка
+         ActiveWord::tableAddLine(table, 1);//добавляю строчку
+         if(i == count) return;
 
 
+    QString ad;
+        ad = tableDat_in.at(i).at(j-1);
       //добавление данных
      QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start, j);
-     cell->querySubObject("Range")->dynamicCall("InsertAfter(Text)", tableDat_in.at(i).at(j));
+     cell->querySubObject("Range")->dynamicCall("InfertAfter(Text )", "sdfsdfsd");//dynamicCall("Text(const QVariant&)", tableDat_in.at(i).at(j));
 
     }
-
+}
 
 //QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
 //int tabColumns = table->querySubObject("Columns")->dynamicCall("count").toInt();
