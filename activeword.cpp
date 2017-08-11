@@ -238,7 +238,11 @@ QVariant ActiveWord::tablePaste(QList<QStringList> table, QVariant separator ){
     params.operator << (QVariant(1));//[DefaultTableBehavior]
     QVariant param;
 
-    param =    wordSelection->dynamicCall("ConvertToTable(const QVariant&,const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&)", params);
+    param =    wordSelection->dynamicCall("ConvertToTable(const QVariant&,const QVariant&, const QVariant&,"
+                                          "const QVariant&, const QVariant&, const QVariant&, const QVariant&,"
+                                          "const QVariant&, const QVariant&, const QVariant&, const QVariant&,"
+                                          "const QVariant&, const QVariant&, const QVariant&, const QVariant&,"
+                                          "const QVariant&)", params);
     return param;
 }
 
@@ -250,7 +254,7 @@ QStringList ActiveWord::tableGetLabels(int tableIndex){
    int tabColumns = table->querySubObject("Columns")->dynamicCall("count").toInt();
    QVariant tabRow = table->querySubObject("Rows")->dynamicCall("count");//.toInt();
    QStringList lable;
-   for(int i = 0; i <= tabColumns; i++){
+   for(int i = 1; i <= tabColumns; i++){
        QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",tabRow, i );
        QVariant str_v = cell->querySubObject("Range")->dynamicCall("Text");
        QString str = str_v.toString();
@@ -259,4 +263,48 @@ QStringList ActiveWord::tableGetLabels(int tableIndex){
        lable << str;
      }
 return lable;
+}
+
+void ActiveWord::tableAddLine(QAxObject* table, int countLine){
+
+  for (int i = 0; i < countLine; i++)
+    table->querySubObject("Rows")->dynamicCall("Add()");
+
+}
+
+void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabel, int tableIndex){
+//прелюдия
+QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+QAxObject* tables = act->querySubObject("Tables");
+//список меток из шаблонной таблицы
+QStringList templateTableLabel = tableGetLabels(tableIndex);
+
+int tabColumns = templateTableLabel.count();
+QList<int> containerIndex;
+for(int i = 0; i < tabColumns; i++)
+  //во всех метках tableLabel ищу нужный индекс в стринглисте меток из шаблона
+  containerIndex.append(templateTableLabel.indexOf(tableLabel[i]));
+
+QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
+const int count = tableDat_in.count();
+int start = 0;
+for(int i = 0; i < count; i++)
+  for(int j = 0; i < tabColumns; j++){
+      if(i != 0 && i != count)          //первая строчка
+           ActiveWord::tableAddLine(table, 1);//добавляю строчку
+
+
+      //добавление данных
+     QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start, j);
+     cell->querySubObject("Range")->dynamicCall("InsertAfter(Text)", tableDat_in.at(i).at(j));
+
+    }
+
+
+//QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
+//int tabColumns = table->querySubObject("Columns")->dynamicCall("count").toInt();
+//QVariant tabRow = table->querySubObject("Rows")->dynamicCall("count");//.toInt();
+//QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",4, 3);
+//cell->querySubObject("Range")->dynamicCall("InsertAfter(Text)", "Это ячейка 1:1");//, "AbraCadabra");
+tabColumns++;
 }

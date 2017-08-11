@@ -33,20 +33,20 @@ MainWindow::MainWindow(QWidget *parent) :
 //   params.operator << (QVariant(3));//[NumColumns]
 //   params.operator << (QVariant(false));// [InitialColumnWidth]
 //   //
-//   params.operator << (QVariant(0));                 //[Format]
-//   params.operator << (QVariant(true));               //  [ApplyBorders]
-//   params.operator << (QVariant(false));               //[ApplyShading]
-//   params.operator << (QVariant(true));             //[ApplyFont]
-//   params.operator << (QVariant(true));         //[ApplyColor]
+//   params.operator << (QVariant(0));      //[Format]
+//   params.operator << (QVariant(true));   //  [ApplyBorders]
+//   params.operator << (QVariant(false));  //[ApplyShading]
+//   params.operator << (QVariant(true));   //[ApplyFont]
+//   params.operator << (QVariant(true));   //[ApplyColor]
 //   //
-//   params.operator << (QVariant(true));       //[ApplyHeadingRows]
-//   params.operator << (QVariant(false));      //[ApplyLastRow]
-//   params.operator << (QVariant(true));       // [ApplyFirstColumn]
+//   params.operator << (QVariant(true));   //[ApplyHeadingRows]
+//   params.operator << (QVariant(false));  //[ApplyLastRow]
+//   params.operator << (QVariant(true));   // [ApplyFirstColumn]
 //   //
-//   params.operator << (QVariant(false));                  //[ApplyLastColumn]
-//   params.operator << (QVariant(true));                    //[AutoFit]
+//   params.operator << (QVariant(false));  //[ApplyLastColumn]
+//   params.operator << (QVariant(true));   //[AutoFit]
 //   params.operator << (QVariant(1));      //[AutoFitBehavior]
-//   params.operator << (QVariant(1));//[DefaultTableBehavior]
+//   params.operator << (QVariant(1));      //[DefaultTableBehavior]
 //   QVariant param;
 
 //   param =    wordSelection->dynamicCall("ConvertToTable(const QVariant&,const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&, const QVariant&)", params);
@@ -54,7 +54,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ActiveWord word;
   word.documentOpen(true, "D:\\Freq.docx");
-  word.tableGetLabels(2);
+  //
+  QStringList label;
+  label  <<"[freq_mhz]"<< "[usp_db]"<< "[up_mkv]"<< "[test]"<<"[up_db]"<<"[usp_mkv]";
+  //
+  QList<QStringList> table;
+  for( uint i =0 ; i < 6; i++){
+      QStringList temp;
+      for(uint j = 0; j < 6; j++)
+        temp.append( QString::number(j) );
+      table.append(temp);
+  }
+  word.tableFill(table,label,1);
+
+
 
 }
 MainWindow::~MainWindow()

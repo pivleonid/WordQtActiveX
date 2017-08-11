@@ -167,9 +167,9 @@ void selectionCopyAllText(bool buffer);
   QVariant tablePaste(QList<QStringList> table, QVariant separator);
   /*==================================================================*/
   /*!  \brief
-  Возвращает количество и список меток в таблице.
+  Возвращает список меток в таблице.
   */
-  void tableGetLabels(int tableIndex);
+  QStringList tableGetLabels(int tableIndex);
   /*==================================================================*/
   /*!  \brief
   Возвращает количество и список меток в таблице.
@@ -179,7 +179,15 @@ void selectionCopyAllText(bool buffer);
   /*!  \brief
   Возвращает количество и список меток в таблице.
   */
-  //void tableFill()//?
+  void tableFill(QList<QStringList> tableDat_in,/*!< [in] Таблица для вставки */
+                 QStringList tableLabel,        /*!< [in] Список всех меток  */
+                 int tableIndex                 /*!< [in] индекс таблицы  */
+                 );
+  /*==================================================================*/
+  /*!  \brief
+  Добавляет "countLine" строк в таблицу "table".
+  */
+  void tableAddLine(QAxObject* table, int countLine);
 };
 
 /*==================================================================*/
