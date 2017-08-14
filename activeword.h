@@ -169,7 +169,9 @@ void selectionCopyAllText(bool buffer);
   /*!  \brief
   Возвращает список меток в таблице.
   */
-  QStringList tableGetLabels(int tableIndex);
+  QStringList tableGetLabels(int tableIndex, /*!< [in] индекс таблицы  */
+                             int tabRow      /*!< [in] номер шаблонный строки в таблице  */
+                             );
   /*==================================================================*/
   /*!  \brief
   Возвращает количество и список меток в таблице.
@@ -181,7 +183,8 @@ void selectionCopyAllText(bool buffer);
   */
   void tableFill(QList<QStringList> tableDat_in,/*!< [in] Таблица для вставки */
                  QStringList tableLabel,        /*!< [in] Список всех меток  */
-                 int tableIndex                 /*!< [in] индекс таблицы  */
+                 int tableIndex,                /*!< [in] индекс таблицы  */
+                 int tabRow                     /*!< [in] номер шаблонный строки в таблице  */
                  );
   /*==================================================================*/
   /*!  \brief
