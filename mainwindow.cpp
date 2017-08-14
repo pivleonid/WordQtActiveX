@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
   table.append(table2);
 
 
-  word.tableFill(table,label,5, 2);
+  word.tableFill(table,label,5, 3);
   int j = 1;
   j++;
 

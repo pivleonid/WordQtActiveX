@@ -294,7 +294,7 @@ void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabe
       for(int j = 1; j <= tabColumns; j++){
 
           if(containerIndex[j-1] == -1) continue;
-          cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start , j);
+          cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start-1 , j);
           cell->querySubObject("Range")->dynamicCall("Select()");
           wordApplication_->querySubObject("Selection")->dynamicCall("TypeText(Text)", tableDat_in[i-1][containerIndex[j-1]]);
 
