@@ -21,7 +21,7 @@ class ActiveWord{
   QAxObject* wordApplication_; ///< файл ворда
   QAxObject* documents_;       ///< Коллекция документов
   //Внутренняя функция.
-  QVariant selectionFind( QString oldString = "", QString newString = ""   /*!< [in] Старая строкаи строка для замены   */
+  bool selectionFind( QString oldString = "", QString newString = ""   /*!< [in] Старая строкаи строка для замены   */
       ,bool searchReg     = false                      /*!< [in] Учитывать регистр   */
       ,bool searchAllWord = false                      /*!< [in] Поиск целого слова  */
       ,bool searchForward = true                       /*!< [in] поиск вперед   */
@@ -105,7 +105,7 @@ public:
    Замена всех меток или только первой
   \return метку
   */
-QVariant selectionFindReplaseAll(QString oldString, QString newString,
+bool selectionFindReplaseAll(QString oldString, QString newString,
                                      bool allText  /*!< [in] Замена всех меток  */
                                      );
   //----------------------------------------------------------

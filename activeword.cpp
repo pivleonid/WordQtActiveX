@@ -40,7 +40,7 @@ void ActiveWord::selectionPasteText(QVariant string){
   wordSelection->dynamicCall("TypeText(const QVariant&)", string);
 }
 //----------------------------------------------------------
-QVariant ActiveWord::selectionFind( QString oldString , QString newString
+bool ActiveWord::selectionFind( QString oldString , QString newString
                          ,bool searchReg, bool searchAllWord, bool searchForward
                          , bool searchFormat, bool clearFormatting, int replace ){
 
@@ -56,18 +56,16 @@ QVariant ActiveWord::selectionFind( QString oldString , QString newString
     params.operator << (QVariant(false));//звуки
     params.operator << (QVariant(false));//все словоформы
     params.operator << (QVariant(searchForward));// вперед (поиск)
-    params.operator << (QVariant("0"));// 0 =  операция поиска заканчивается, 1 = операция поиска продолжается ,
+    params.operator << (QVariant("1"));// 0 =  операция поиска заканчивается, 1 = операция поиска продолжается ,
     //если достигнут начало или конец диапазона поиска
     params.operator << (QVariant(searchFormat)); //(Для применения форматирования необходимо TRUE)
     params.operator << (QVariant(newString));//Текст для замены
     params.operator << (QVariant(replace)); //2 = Замена всех; 1 = Замена первого; 0 = без замен.
-    params.operator << (QVariant(false)); //облако пафоса
-    params.operator << (QVariant(false)); //облако пафоса
-    params.operator << (QVariant(false)); //облако пафоса
-    params.operator << (QVariant(false)); //облако пафоса
-    QVariant param;
-
-    param =    findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
+    params.operator << (QVariant(true)); //облако пафоса
+    params.operator << (QVariant(true)); //облако пафоса
+    params.operator << (QVariant(true)); //облако пафоса
+    params.operator << (QVariant(true)); //облако пафоса
+    QVariant param =    findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,"
@@ -76,7 +74,7 @@ QVariant ActiveWord::selectionFind( QString oldString , QString newString
                       "const QVariant&,const QVariant&,const QVariant&)",
                       params);
 
-    return param;
+    return param.toBool();
 }
 //----------------------------------------------------------
 bool ActiveWord::selectionFindAndPasteBuffer(QAxObject *document1, QAxObject *document2, QString findLabel){
@@ -93,11 +91,11 @@ bool ActiveWord::selectionFindAndPasteBuffer(QAxObject *document1, QAxObject *do
 }
 
 //----------------------------------------------------------
-QVariant ActiveWord::selectionFindReplaseAll(QString oldString, QString newString, bool allText)
+bool ActiveWord::selectionFindReplaseAll(QString oldString, QString newString, bool allText)
 {
   if(allText)
-    return  selectionFind( oldString, newString,false,false,true,false, true, 2 );
-  return selectionFind( oldString, newString,false,false,true,false, true, 1 );
+    return  selectionFind( oldString, newString,false,false,true,true, false, 2 );
+  return selectionFind( oldString, newString,false,false,true,true, false, 1 );
 
 }
 
@@ -287,23 +285,38 @@ for(int i = 0; i < tabColumns; i++)
 
 QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
 const int count = tableDat_in.count();
+ QAxObject* cell;
+ bool firstRow;
 int start = 0; //стартовый индекс номера строки
 for(int i = 1; i <= count; i++){
-
+    if(i != 1 + start){
+        if(i == count) return;
+        tableAddLine(table, 1);//добавляю строчку
+        firstRow = false;
+    }
+    else firstRow = true;
   for(int j = 1; j <= tabColumns; j++){
-      if(i != 0)// && i != count)          //первая строчка
-         ActiveWord::tableAddLine(table, 1);//добавляю строчку
-         if(i == count) return;
+
+      if (firstRow == true){
+
+          //selectionFindReplaseAll(tableLabel.at(j-1),tableDat_in.at(i-1).at(j-1),false);
+          if(containerIndex[j-1] == -1) continue;// пропуск не совпадающего символа
+          cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start , j);
+          cell->querySubObject("Range")->dynamicCall("Select()");
+          wordApplication_->querySubObject("Selection")->dynamicCall("TypeText(Text)", tableDat_in[i-1][containerIndex[j-1]]);
+
+          continue;
+      }
+        if(containerIndex[j-1] == -1) continue;
+      cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start , j);
+      //cell->querySubObject("Range")->dynamicCall("InsertAfter(const QVariant&)", tableDat_in.at(i).at(j-1));
+
+//      QString cont_s = tableDat_in[i][containerIndex.indexOf(containerIndex[j-1])];
+//      int cont_i = cont_s.toInt();
+          QString cont_i = tableDat_in[i-1][containerIndex[j-1]];
+     cell->querySubObject("Range")->dynamicCall("InsertAfter(const QVariant&)", cont_i );
 
 
-    QString ad;
-        ad = tableDat_in.at(i).at(j-1);
-      //добавление данных
-     QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start, j);
-       //cell->querySubObject("Range")->dynamicCall("Select()");
-   cell->querySubObject("Range")->dynamicCall("InsertAfter(const QVariant&)", tableDat_in.at(i).at(j-1));
-
-    // cell->setProperty("Value(sdfsdf)", "sdfsdfsd");//dynamicCall("Text(const QVariant&)", tableDat_in.at(i).at(j));
 
     }
 }
