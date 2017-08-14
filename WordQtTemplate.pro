@@ -27,11 +27,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    activeword.cpp
+    activeword.cpp \
+    activeexcel.cpp
 
 HEADERS += \
         mainwindow.h \
-    activeword.h
+    activeword.h \
+    activeexcel.h
 
 FORMS += \
         mainwindow.ui

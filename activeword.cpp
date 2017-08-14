@@ -146,6 +146,10 @@ QVariant ActiveWord:: selectionFindFontname(QString string,  bool allText, bool 
   if(!underline)
     font->setProperty("Underline", "wdUnderlineNone");
   font->setProperty("Name", fontName);
+  delete font;
+  delete replacement;
+  delete findString;
+  delete word
   if(allText)
     return selectionFind( string, string,false,false,true,true, true, 2 );
   return  selectionFind( string, string,false,false,true,true, true, 1 );
@@ -156,12 +160,15 @@ void ActiveWord:: selectionCopyAllText( bool buffer){
     wordSelection->dynamicCall("WholeStory()");//выделение всего
     if(buffer)
       wordSelection->dynamicCall("Copy()");//копирование выделенного в буфер обмена
+    delete wordSelection;
+
 }
 
 //------------------Вставка текста из буфера
 void ActiveWord:: selectionPasteTextFromBuffer(){
   QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
   wordSelection->dynamicCall("Paste()");
+  delete wordSelection;
 }
 //----------------------------------------------------------
 void ActiveWord::documentClose(QAxObject* document){
@@ -183,10 +190,12 @@ bool ActiveWord::documentCheckAndClose( QString docName, bool save){
       if(name == docName){
           if(save) documentIndexClose(item,true);
           if(!save) documentIndexClose(item, false);
+          delete item;
           return true;
       }
 
     }
+    delete item;
     return false;
 }
 
@@ -241,6 +250,7 @@ QVariant ActiveWord::tablePaste(QList<QStringList> table, QVariant separator ){
                                           "const QVariant&, const QVariant&, const QVariant&, const QVariant&,"
                                           "const QVariant&, const QVariant&, const QVariant&, const QVariant&,"
                                           "const QVariant&)", params);
+    delete wordSelection;
     return param;
 }
 
@@ -251,23 +261,28 @@ QStringList ActiveWord::tableGetLabels(int tableIndex, int tabRow ){
    QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
    int tabColumns = table->querySubObject("Columns")->dynamicCall("count").toInt();
   // QVariant tabRow = table->querySubObject("Rows")->dynamicCall("count");//.toInt();
+   QAxObject* cell;
    QStringList lable;
    for(int i = 1; i <= tabColumns; i++){
-       QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",tabRow, i );
+       cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",tabRow, i );
        QVariant str_v = cell->querySubObject("Range")->dynamicCall("Text");
        QString str = str_v.toString();
        int index = str.indexOf("]", 0 );
        str = str.mid(0, index+1);
        lable << str;
      }
+   delete cell;
+   delete table;
+   delete tables;
+   delete act;
 return lable;
 }
 
 void ActiveWord::tableAddLine(QAxObject* table, int countLine){
-
+  QAxObject* rows;
   for (int i = 0; i < countLine; i++)
-    table->querySubObject("Rows")->dynamicCall("Add()");
-
+    rows = table->querySubObject("Rows")->dynamicCall("Add()");
+  delete rows;
 }
 
 void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabel, int tableIndex, int start){
@@ -288,7 +303,8 @@ void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabe
   QAxObject* cell;
   for(int i = 1; i <= count; i++){
       if(i != 1 + start){
-          if(i == count+1) return;
+          if(i == count+1)
+            return;
           tableAddLine(table, 1);//добавляю строчку
         }
       for(int j = 1; j <= tabColumns; j++){
@@ -300,7 +316,10 @@ void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabe
 
         }
     }
-
+  delete cell;
+  delete table;
+  delete tables;
+  delete act;
 }
 
 
