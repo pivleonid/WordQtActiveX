@@ -38,6 +38,7 @@ QAxObject* ActiveWord::documentOpen(bool template_, QVariant path){
 void ActiveWord::selectionPasteText(QVariant string){
   QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
   wordSelection->dynamicCall("TypeText(const QVariant&)", string);
+  delete wordSelection;
 }
 //----------------------------------------------------------
 bool ActiveWord::selectionFind( QString oldString , QString newString
@@ -73,7 +74,9 @@ bool ActiveWord::selectionFind( QString oldString , QString newString
                       "const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,const QVariant&)",
                       params);
-
+    
+    delete findString;
+    delete wordSelection;
     return param.toBool();
 }
 //----------------------------------------------------------
@@ -110,6 +113,10 @@ QVariant ActiveWord::selectionFindColor(QString string, QVariant color, bool all
   //Доступ к шрифту для замены
   QAxObject* font = replacement->querySubObject("Font()");
   font->setProperty("ColorIndex", color); //например wdBlue
+  delete font;
+  delete replacement;
+  delete findString;
+  delete wordSelection;
   if(allText)
     return selectionFind( string, string,false,false,true,true, true, 2 );
   return selectionFind( string, string,false,false,true,true, true, 1 );
@@ -124,6 +131,10 @@ QVariant ActiveWord:: selectionFindSize(QString string, QVariant fontSize, bool 
   //Доступ к шрифту для замены
   QAxObject* font = replacement->querySubObject("Font()");
   font->setProperty("Size", fontSize);
+  delete font;
+  delete replacement;
+  delete findString;
+  delete wordSelection;
   if(allText)
     return selectionFind( string, string,false,false,true,true, true, 2 );
   return selectionFind( string, string,false,false,true,true, true, 1 );
@@ -149,7 +160,7 @@ QVariant ActiveWord:: selectionFindFontname(QString string,  bool allText, bool 
   delete font;
   delete replacement;
   delete findString;
-  delete word
+  delete wordSelection;
   if(allText)
     return selectionFind( string, string,false,false,true,true, true, 2 );
   return  selectionFind( string, string,false,false,true,true, true, 1 );
@@ -278,10 +289,10 @@ QStringList ActiveWord::tableGetLabels(int tableIndex, int tabRow ){
 return lable;
 }
 
-void ActiveWord::tableAddLine(QAxObject* table, int countLine){
+void ActiveWord::tableAddLine(QAxObject* table){
   QAxObject* rows;
-  for (int i = 0; i < countLine; i++)
-    rows = table->querySubObject("Rows")->dynamicCall("Add()");
+  rows = table->querySubObject("Rows");//->dynamicCall("Add()");
+  rows->dynamicCall("Add()");
   delete rows;
 }
 
@@ -305,7 +316,7 @@ void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabe
       if(i != 1 + start){
           if(i == count+1)
             return;
-          tableAddLine(table, 1);//добавляю строчку
+          tableAddLine(table);//добавляю строчку
         }
       for(int j = 1; j <= tabColumns; j++){
 

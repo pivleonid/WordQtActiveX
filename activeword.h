@@ -192,7 +192,7 @@ void selectionCopyAllText(bool buffer);
   /*!  \brief
   Добавляет "countLine" строк в таблицу "table".
   */
-  void tableAddLine(QAxObject* table, int countLine);
+  void tableAddLine(QAxObject* table);
 };
 
 /*==================================================================*/

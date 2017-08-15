@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "qaxobject.h"
   #include "activeword.h"
+#include "activeexcel.h"
 #include "qdebug.h"
 
 #include <windows.h>
@@ -14,48 +15,40 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  ActiveWord word;
-   word.documentOpen(true, "D:\\Otpuck3.docx");
-   word.selectionFindReplaseAll("[code1]", "1286", false);
-   word.selectionFindReplaseAll("[code2]", "720-816", false);
-   word.selectionFindReplaseAll("[nameOrganization]", "НПП ГАММА", false);
-   word.selectionFindReplaseAll("[post]", "Руководитель отдела разработки ПО", false);
-   word.selectionFindReplaseAll("[numberDoc]", "1", false);
-   word.selectionFindReplaseAll("[date]", "12.07.1993", false);
-   word.selectionFindReplaseAll("[year]", "17", false);
 
-   QStringList list = word.tableGetLabels(5, 2);
+  ActiveExcel Excel;
+  QAxObject* doc1 = Excel.documentOpen();
+  QAxObject* sheet1 = Excel.documentAddSheet(doc1);
 
-   QStringList label;
-   label << "[1]"<<"[2]"<<"[3]"<<"[4]"<<"[5]"<<"[6]"<<"[7]"<<"[8]"<<"[9]";
-
-   QList<QStringList> table;
-   QStringList table1;
-   table1.append("ПКД");
-   table1.append("Инженер");
-   table1.append("Кирьянов И.О.");
-   table1.append( "1");
-   table1.append("12");
-   table1.append("12.07.1999");
-   table1.append("12.07.1999");
-   table1.append( "документ №3");
-   table1.append( "12.08.1999");
-   table.append(table1);
- //  //
-    QStringList table2;
-   table2.append("ПК1Д");
-   table2.append("Инженер1");
-   table2.append("Кирьяноasdв И.О.");
-   table2.append( "112");
-   table2.append("132");
-   table2.append("12.07.1999");
-   table2.append("12.07.1999");
-   table2.append( "документ №3");
-   table2.append( "12.08.1999");
-   table.append(table2);
+   Excel.documentSheetActive(sheet1, "Лист1");
+   Excel.documentSheetActive(sheet1, "Лист2");
 
 
-   word.tableFill(table,label,5, 3); //5 таблица 3 строка
+//  QAxObject *mExcel = new QAxObject( "Excel.Application",this);
+//  mExcel->setProperty("DisplayAlerts", false);
+//  mExcel->setProperty("Visible", true);
+//  // на книги
+//  QAxObject *workbooks = mExcel->querySubObject( "Workbooks" );
+//  // на директорию, откуда грузить книгу
+//  QAxObject *workbook = workbooks->querySubObject( "Add" );
+//  // на листы (снизу вкладки)
+//  QAxObject *mSheets = workbook->querySubObject( "Sheets" );
+//  // указываем, какой лист выбрать. У меня он называется topic.
+//  QAxObject* mSheets1 = mSheets->querySubObject("Add");
+//  //указатель на нужный лист
+//  QAxObject *StatSheet = mSheets->querySubObject( "Item(const QVariant&)", QVariant("Лист2") );
+//  // получение указателя на ячейку [row][col] ((!)нумерация с единицы)
+//  QAxObject* cell = StatSheet->querySubObject("Cells(QVariant,QVariant)", 1 , 1);
+//  // вставка значения переменной data (любой тип, приводимый к QVariant) в полученную ячейку
+//  cell->setProperty("Value", "Hello");
+//  //
+//  StatSheet = mSheets->querySubObject( "Item(const QVariant&)", QVariant("Лист1") );
+//    // получение указателя на ячейку [row][col] ((!)нумерация с единицы)
+//   cell = StatSheet->querySubObject("Cells(QVariant,QVariant)", 1 , 1);
+//    // вставка значения переменной data (любой тип, приводимый к QVariant) в полученную ячейку
+//    cell->setProperty("Value", "Hello1");
+  int i;
+  i++;
 
 
 
