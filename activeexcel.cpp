@@ -6,7 +6,7 @@ ActiveExcel::ActiveExcel()
   excelApplication_->setProperty("DisplayAlerts", false);
   excelApplication_->setProperty("Visible", true);
   worcbooks_ = excelApplication_->querySubObject( "Workbooks" );
-  sheets_ = new QAxObject;
+
 
 
 }
@@ -18,6 +18,7 @@ ActiveExcel::~ActiveExcel(){
 }
 
 
+
 QAxObject* ActiveExcel::documentOpen(QVariant path){
     if (path == ""){
      return worcbooks_->querySubObject("Add");
@@ -26,11 +27,13 @@ QAxObject* ActiveExcel::documentOpen(QVariant path){
 
 }
 
-QAxObject* ActiveExcel::documentAddSheet(QAxObject* worcbooks ){
+void ActiveExcel::documentGetSheet(QAxObject *document){
+   sheets_ = document->querySubObject( "Sheets" );
+}
 
-        sheets_ = worcbooks->querySubObject("Sheets");
-       return    sheets_->querySubObject("Add");
+QAxObject* ActiveExcel::documentAddSheet(QAxObject* sheets ){
 
+  return    sheets_->querySubObject("Add");
 }
 
 QAxObject* ActiveExcel::documentSheetActive( QVariant sheet){

@@ -29,6 +29,8 @@ public:
   ActiveExcel();
   ~ActiveExcel();
   QAxObject* documentOpen(QVariant path = "");      /*!< [in] path = "" открывается пустой документ   */
+  //функция станавливающая коллекцию листов. Вызывать обязательно после documentOpen
+  void documentGetSheet(QAxObject* document);
   //Возвращает указатель на лист
   QAxObject* documentAddSheet( QAxObject* document ); /*!< [in] документ   */
 
