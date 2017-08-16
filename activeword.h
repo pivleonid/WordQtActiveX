@@ -159,6 +159,7 @@ void selectionCopyAllText(bool buffer);
   \return тип selection
   */
   void selectionPasteTextFromBuffer(void);// выделенный текст
+  void selectionPasteTextFromBuffer(QString findLabel);// вставка в метку
 //----------------------------------------------------------
 /*! \brief Операции c таблицами*/
 //----------------------------------------------------------

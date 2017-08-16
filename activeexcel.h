@@ -29,9 +29,9 @@ public:
   ActiveExcel();
   ~ActiveExcel();
   QAxObject* documentOpen(QVariant path = "");      /*!< [in] path = "" открывается пустой документ   */
-  QAxObject* documentAddSheet( QAxObject* document, /*!< [in] документ   */
-                               QVariant sheet = ""  /*!< [in] sheet имя листа   */
-                             );
+  //Возвращает указатель на лист
+  QAxObject* documentAddSheet( QAxObject* document ); /*!< [in] документ   */
+
   //Возвращает указатель листа. По умолчанию Лист1, Лист2 ...
   QAxObject* documentSheetActive(QVariant sheet);  /*!< [in] sheet имя листа  */
   //QAxObject* documentRemoveSheet(QAxObject* sheet);/*!< [in] sheet указатель на объект листа   */

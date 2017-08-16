@@ -26,7 +26,7 @@ QAxObject* ActiveExcel::documentOpen(QVariant path){
 
 }
 
-QAxObject* ActiveExcel::documentAddSheet(QAxObject* worcbooks, QVariant sheet ){
+QAxObject* ActiveExcel::documentAddSheet(QAxObject* worcbooks ){
 
         sheets_ = worcbooks->querySubObject("Sheets");
        return    sheets_->querySubObject("Add");
@@ -98,7 +98,7 @@ void ActiveExcel::sheetCellHeightWidth(QAxObject *sheet, QVariant RowHeight, QVa
 }
 
 void ActiveExcel::sheetCellHorizontalAlignment(QAxObject* sheet, QVariant rowCol, bool left, bool right, bool center){
-  QAxObject *rangep = StatSheet->querySubObject( "Range(const QVariant&)", rowCol);
+  QAxObject *rangep = sheet->querySubObject( "Range(const QVariant&)", rowCol);
   rangep->dynamicCall("Select()");
   if (left == true)rangep->dynamicCall("HorizontalAlignment",-4152);
   if (right == true)rangep->dynamicCall("HorizontalAlignment",-4131);
@@ -106,7 +106,7 @@ void ActiveExcel::sheetCellHorizontalAlignment(QAxObject* sheet, QVariant rowCol
 }
 
 void ActiveExcel::sheetCellVerticalAlignment(QAxObject* sheet, QVariant rowCol, bool up, bool down, bool center){
-  QAxObject *rangep = StatSheet->querySubObject( "Range(const QVariant&)", rowCol);
+  QAxObject *rangep = sheet->querySubObject( "Range(const QVariant&)", rowCol);
    rangep->dynamicCall("Select()");
    if (up == true)rangep->dynamicCall("VerticalAlignment",-4160);
    if (down == true)rangep->dynamicCall("VerticalAlignment",-4107);

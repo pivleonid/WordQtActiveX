@@ -181,6 +181,12 @@ void ActiveWord:: selectionPasteTextFromBuffer(){
   wordSelection->dynamicCall("Paste()");
   delete wordSelection;
 }
+//------------------Вставка текста из буфера в метку
+void ActiveWord:: selectionPasteTextFromBuffer(QString findLabel){
+
+  selectionFind(findLabel, "", false, false, true, false, true, 0);
+  selectionPasteTextFromBuffer();
+}
 //----------------------------------------------------------
 void ActiveWord::documentClose(QAxObject* document){
         document->dynamicCall("Close(wdDoNotSaveChanges)");
