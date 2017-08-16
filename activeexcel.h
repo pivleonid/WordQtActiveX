@@ -23,7 +23,7 @@
 class ActiveExcel
 {
   QAxObject* excelApplication_; ///< файл ворда
-  QAxObject* documents_;        ///< Коллекция документов
+  QAxObject* worcbooks_;        ///< Коллекция документов
   QAxObject* sheets_;           ///< Коллекция листов
 public:
   ActiveExcel();
@@ -33,17 +33,50 @@ public:
                                QVariant sheet = ""  /*!< [in] sheet имя листа   */
                              );
   //Возвращает указатель листа. По умолчанию Лист1, Лист2 ...
-  QAxObject* documentSheetActive(QAxObject* sheet1 ,QVariant sheet);  /*!< [in] sheet имя листа  */
+  QAxObject* documentSheetActive(QVariant sheet);  /*!< [in] sheet имя листа  */
   //QAxObject* documentRemoveSheet(QAxObject* sheet);/*!< [in] sheet указатель на объект листа   */
   QAxObject* documentClose(QAxObject* document);   /*!< [in] указатель на созданный документ  */
   //путь до сохраниения и сам документ, который удалится в функции
   void documentCloseAndSave(QAxObject *document, QVariant path);  /*!< [in] путь для сохранения  */
-
+  //установка значения в ячейку
   void sheetCellPaste(QAxObject* sheet,/*!< [in] указатель листа  */
                       QVariant string, /*!< [in] строка для вставки  */
                       QVariant row, QVariant col /*!< [in] строка и столбец ячейки  */
                       );
+  // Получение значения из ячейки
+  QVariant sheetCellInsert(QAxObject* sheet,/*!< [in] указатель листа  */
+                           QVariant row, QVariant col /*!< [in] строка и столбец ячейки  */
+                           );
+  //копирование ячеек в буфер
+  // диспазон ячейки записывается как A1:B13
+  void sheetCopyToBuf(QAxObject* sheet,/*!< [in] указатель листа  */
+                      QVariant rowCol  /*!< [in] Диапазон  */
+                      );
+  //вставка из буфера
+  void sheetPastFromBuf(QAxObject* sheet,/*!< [in] указатель листа  */
+                        QVariant rowCol  /*!< [in] Диапазон  */
+                        );
 
+  //Объединение ячеек
+   void sheetCellMerge(QAxObject* sheet,/*!< [in] указатель листа  */
+                       QVariant rowCol  /*!< [in] Диапазон  */
+                       );
+
+  //Ширина строк и столбцов
+   void sheetCellHeightWidth(QAxObject* sheet,/*!< [in] указатель листа  */
+                       QVariant RowHeight, QVariant ColumnWidth,
+                       QVariant rowCol/*!< [in] Диапазон  */
+                       );
+   //выравнивание ячеек. один из 3 параметров равен true
+  void sheetCellHorizontalAlignment(QAxObject* sheet,          /*!< [in] указатель листа  */
+                                    QVariant rowCol,
+                                    bool left = false, bool right = false, bool center = false);
+  void sheetCellVerticalAlignment(QAxObject* sheet,            /*!< [in] указатель листа  */
+                                  QVariant rowCol,              /*!< [in] Диапазон или номер ячейки  */
+                                  bool up = false, bool down = false, bool center = false);
+  //void sheetCellBackgroundAndFontColor()
 };
 
 #endif // ACTIVEEXCEL_H
+
+
