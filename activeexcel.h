@@ -28,55 +28,100 @@ class ActiveExcel
 public:
   ActiveExcel();
   ~ActiveExcel();
+  /*==================================================================*/
+  /*!  \brief
+   Открыть документ
+  */
   QAxObject* documentOpen(QVariant path = "");      /*!< [in] path = "" открывается пустой документ   */
-  //функция станавливающая коллекцию листов. Вызывать обязательно после documentOpen
+  /*==================================================================*/
+  /*!  \brief
+   Устанавливает коллекцию листов. Вызывать обязательно после documentOpen
+  */
   void documentGetSheet(QAxObject* document);
-  //Возвращает указатель на лист
-  QAxObject* documentAddSheet( QAxObject* document ); /*!< [in] документ   */
-
-  //Возвращает указатель листа. По умолчанию Лист1, Лист2 ...
-  QAxObject* documentSheetActive(QVariant sheet);  /*!< [in] sheet имя листа  */
-  //QAxObject* documentRemoveSheet(QAxObject* sheet);/*!< [in] sheet указатель на объект листа   */
-  QAxObject* documentClose(QAxObject* document);   /*!< [in] указатель на созданный документ  */
-  //путь до сохраниения и сам документ, который удалится в функции
-  void documentCloseAndSave(QAxObject *document, QVariant path);  /*!< [in] путь для сохранения  */
-  //установка значения в ячейку
+  /*==================================================================*/
+  /*!  \brief
+   Возвращает указатель на созданный лист
+  */
+  QAxObject* documentAddSheet(  ); /*!< [in] документ   */
+  /*==================================================================*/
+  /*!  \brief
+   \param [in] sheet - имя листа. По умолчанию создается Лист1, Лист2 ...
+  \return  указатель листа
+  */
+  QAxObject* documentSheetActive(QVariant sheet);
+  /*==================================================================*/
+  /*!  \brief
+  Закрытие документа без сохранения
+  */
+  void documentClose(QAxObject* document);   /*!< [in] указатель на созданный документ  */
+  /*==================================================================*/
+  /*!  \brief
+   \param [in] path   путь для сохранения
+  \return  указатель листа
+  */
+  void documentCloseAndSave(QAxObject *document, QVariant path);
+  /*==================================================================*/
+  /*!  \brief
+   Установка значения в ячейку
+  */
   void sheetCellPaste(QAxObject* sheet,/*!< [in] указатель листа  */
                       QVariant string, /*!< [in] строка для вставки  */
                       QVariant row, QVariant col /*!< [in] строка и столбец ячейки  */
                       );
-  // Получение значения из ячейки
+  /*==================================================================*/
+  /*!  \brief
+   Получение значения из ячейки
+  */
   QVariant sheetCellInsert(QAxObject* sheet,/*!< [in] указатель листа  */
                            QVariant row, QVariant col /*!< [in] строка и столбец ячейки  */
                            );
-  //копирование ячеек в буфер
-  // диспазон ячейки записывается как A1:B13
+  /*==================================================================*/
+  /*!  \brief
+  копирование ячеек в буфер
+  диспазон ячейки записывается как A1:B13
+  */
+
   void sheetCopyToBuf(QAxObject* sheet,/*!< [in] указатель листа  */
                       QVariant rowCol  /*!< [in] Диапазон  */
                       );
-  //вставка из буфера
+  /*==================================================================*/
+  /*!  \brief
+  вставка из буфера
+  */
   void sheetPastFromBuf(QAxObject* sheet,/*!< [in] указатель листа  */
                         QVariant rowCol  /*!< [in] Диапазон  */
                         );
-
-  //Объединение ячеек
+  /*==================================================================*/
+  /*!  \brief
+  Объединение ячеек
+  */
    void sheetCellMerge(QAxObject* sheet,/*!< [in] указатель листа  */
                        QVariant rowCol  /*!< [in] Диапазон  */
                        );
 
-  //Ширина строк и столбцов
+   /*==================================================================*/
+   /*!  \brief
+   Ширина строк и столбцов
+   */
    void sheetCellHeightWidth(QAxObject* sheet,/*!< [in] указатель листа  */
                        QVariant RowHeight, QVariant ColumnWidth,
                        QVariant rowCol/*!< [in] Диапазон  */
                        );
-   //выравнивание ячеек. один из 3 параметров равен true
+   /*==================================================================*/
+   /*!  \brief
+   Выравнивание ячеек. один из 3 параметров равен true
+   */
   void sheetCellHorizontalAlignment(QAxObject* sheet,          /*!< [in] указатель листа  */
                                     QVariant rowCol,
                                     bool left = false, bool right = false, bool center = false);
+  /*==================================================================*/
+  /*!  \brief
+  Выравнивание ячеек. один из 3 параметров равен true
+  */
   void sheetCellVerticalAlignment(QAxObject* sheet,            /*!< [in] указатель листа  */
                                   QVariant rowCol,              /*!< [in] Диапазон или номер ячейки  */
                                   bool up = false, bool down = false, bool center = false);
-  //void sheetCellBackgroundAndFontColor()
+
 };
 
 #endif // ACTIVEEXCEL_H

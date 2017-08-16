@@ -31,7 +31,7 @@ void ActiveExcel::documentGetSheet(QAxObject *document){
    sheets_ = document->querySubObject( "Sheets" );
 }
 
-QAxObject* ActiveExcel::documentAddSheet(QAxObject* sheets ){
+QAxObject* ActiveExcel::documentAddSheet( ){
 
   return    sheets_->querySubObject("Add");
 }
@@ -45,7 +45,7 @@ QAxObject* ActiveExcel::documentSheetActive( QVariant sheet){
 // ActiveWindow.SelectedSheets.Delete
 //}
 
-QAxObject* ActiveExcel::documentClose(QAxObject* document){
+void ActiveExcel::documentClose(QAxObject* document){
   document->dynamicCall("Close(wdDoNotSaveChanges)");
   delete document;
 
