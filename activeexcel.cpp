@@ -18,18 +18,15 @@ ActiveExcel::~ActiveExcel(){
 }
 
 
-
-QAxObject* ActiveExcel::documentOpen(QVariant path){
-    if (path == ""){
-     return worcbooks_->querySubObject("Add");
-    }
-  return worcbooks_->querySubObject("Add(const QVariant &)", path);
+void ActiveExcel::documentOpen(QVariant path){
+  QAxObject *document;
+  if (path == "") document = worcbooks_->querySubObject("Add");
+  else document = worcbooks_->querySubObject("Add(const QVariant &)", path);
+  sheets_ = document->querySubObject( "Sheets" );
 
 }
 
-void ActiveExcel::documentGetSheet(QAxObject *document){
-   sheets_ = document->querySubObject( "Sheets" );
-}
+
 
 QAxObject* ActiveExcel::documentAddSheet( ){
 

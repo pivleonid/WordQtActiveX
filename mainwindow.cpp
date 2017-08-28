@@ -17,14 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
   ActiveExcel excel;
-  QAxObject* workbook = excel.documentOpen("D:\\testil.xlsx");
-  excel.documentGetSheet(workbook);
-
-
+  excel.documentOpen("D:\\testil.xlsx");
   QAxObject* sheet = excel.documentSheetActive("Лист1");
   excel.sheetCellPaste(sheet, "hi",1,1); //запись в ячейку A1
 
-  excel.documentAddSheet(sheet);
+  excel.documentAddSheet();
   sheet = excel.documentSheetActive("Лист2");
   excel.sheetCellPaste(sheet, "hi1",1,1); //запись в ячейку A1
 
