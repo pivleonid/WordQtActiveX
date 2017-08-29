@@ -16,15 +16,15 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
 
 
-  ActiveExcel excel;
-  QAxObject* workbook = excel.documentOpen("D:\\testil.xlsx");
-  QAxObject* sheet = excel.documentSheetActive("Лист1");
-  excel.sheetCellPaste(sheet, "hi",1,1); //запись в ячейку A1
-  excel.documentAddSheet("Лист-хуист");
-  excel.documentAddSheet();
-  sheet = excel.documentSheetActive("Лист-хуист");
-  excel.sheetCellPaste(sheet, "hi111",1,1); //запись в ячейку A1
-  //excel.sheetProperty("name13", workbook);
+//  ActiveExcel excel;
+//  QAxObject* workbook = excel.documentOpen("D:\\testil.xlsx");
+//  QAxObject* sheet = excel.documentSheetActive("Лист1");
+//  excel.sheetCellPaste(sheet, "hi",1,1); //запись в ячейку A1
+//  excel.documentAddSheet("Лист-хуист");
+//  excel.documentAddSheet();
+//  sheet = excel.documentSheetActive("Лист-хуист");
+//  excel.sheetCellPaste(sheet, "hi111",1,1); //запись в ячейку A1
+//  //excel.sheetProperty("name13", workbook);
 
 //  excel.documentAddSheet();
 //  sheet = excel.documentSheetActive("Лист2");
@@ -87,6 +87,10 @@ MainWindow::MainWindow(QWidget *parent) :
 //   word.selectionFindAndPasteBuffer(doc2,doc1, "[lable_tab1]" );
 
 //  word.documentSave(doc1,"D:/", "otpuskFull", "docx");
+
+  ActiveWord word;
+   word.documentOpen(true, "D:\\Freq.docx"); //метка label1
+  word.tableMergeCell(1, "[up_mkv]","Яблочки", 1, 1);
 
   int i;
   i++;

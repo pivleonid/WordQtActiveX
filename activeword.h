@@ -202,6 +202,16 @@ void selectionCopyAllText(bool buffer);
   Добавляет "countLine" строк в таблицу "table".
   */
   void tableAddLine(QAxObject* table);
+
+  /*==================================================================*/
+  /*!  \brief
+  Объединение ячеек в таблице.
+  Внимание! Кол-во объединенных ячеек вправо- начинаются с 1. А вниз с 0!
+  */
+  void tableMergeCell(int tableIndex, QVariant label, QVariant string, int numberCol, int numberStr);
+
+
+
 };
 
 /*==================================================================*/

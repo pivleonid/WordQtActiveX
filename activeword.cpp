@@ -4,11 +4,11 @@
 //----------------------------------------------------------
 ActiveWord::ActiveWord(){
   wordApplication_ =  new QAxObject("Word.Application");
-  Sleep(1000);
+ // Sleep(1000);
   wordApplication_->setProperty("DisplayAlerts", false);
-  Sleep(1000);
+ // Sleep(1000);
   wordApplication_->setProperty("Visible", true);
-  Sleep(1000);
+  //Sleep(1000);
   documents_ = wordApplication_->querySubObject("Documents");
 
 }
@@ -74,7 +74,6 @@ bool ActiveWord::selectionFind( QString oldString , QString newString
                       "const QVariant&,const QVariant&,"
                       "const QVariant&,const QVariant&,const QVariant&)",
                       params);
-    
     delete findString;
     delete wordSelection;
     return param.toBool();
@@ -344,3 +343,55 @@ void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabe
 //QVariant tabRow = table->querySubObject("Rows")->dynamicCall("count");//.toInt();
 //QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",4, 3);
 //cell->querySubObject("Range")->dynamicCall("InsertAfter(Text)", "Это ячейка 1:1");//, "AbraCadabra");
+
+
+void ActiveWord::tableMergeCell(int tableIndex, QVariant label, QVariant str, int numberCol, int numberStr){
+
+  QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+  QAxObject* tables = act->querySubObject("Tables");
+  QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
+
+  //
+  QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+  QAxObject* findString =  wordSelection->querySubObject("Find");
+    findString->dynamicCall("ClearFormatting()");
+  QList<QVariant> params;//Все параметры не обязательные!
+  params.operator << (QVariant(label)); //не обязательный параметр- можно использовать ""
+  params.operator << (QVariant(false)); //учитывать регистр
+  params.operator << (QVariant(false));//Найти целые слова
+  params.operator << (QVariant(false));// использовать подстанровочные знаки (?)
+  params.operator << (QVariant(false));//звуки
+  params.operator << (QVariant(false));//все словоформы
+  params.operator << (QVariant(true));// вперед (поиск)
+  params.operator << (QVariant("1"));// 0 =  операция поиска заканчивается, 1 = операция поиска продолжается ,
+  //если достигнут начало или конец диапазона поиска
+  params.operator << (QVariant(true)); //(Для применения форматирования необходимо TRUE)
+  params.operator << (QVariant(str));//Текст для замены
+  params.operator << (QVariant(0)); //2 = Замена всех; 1 = Замена первого; 0 = без замен.
+  params.operator << (QVariant(true)); //облако пафоса
+  params.operator << (QVariant(true)); //облако пафоса
+  params.operator << (QVariant(true)); //облако пафоса
+  params.operator << (QVariant(true)); //облако пафоса
+  QVariant param =    findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
+                    "const QVariant&,const QVariant&,"
+                    "const QVariant&,const QVariant&,"
+                    "const QVariant&,const QVariant&,"
+                    "const QVariant&,const QVariant&,"
+                    "const QVariant&,const QVariant&,"
+                    "const QVariant&,const QVariant&,const QVariant&)",
+                    params);
+//
+  wordSelection->dynamicCall("SelectCell");
+
+  wordSelection->dynamicCall("MoveRight(const QVariant&, const QVariant&, const QVariant&)", 1, numberCol, 1) ;
+  wordSelection->dynamicCall("MoveDown(const QVariant&, const QVariant&, const QVariant&)", 5 , numberStr, 1 );
+
+   QAxObject* cells =  wordSelection->querySubObject("Cells");
+   cells->dynamicCall("Merge()");
+
+    wordSelection->dynamicCall("Delete(wdCharacter, 1)");
+   wordSelection->dynamicCall("TypeText(const QVariant&)", str);
+  int i;
+  i++;
+
+}
