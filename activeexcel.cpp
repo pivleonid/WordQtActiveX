@@ -18,22 +18,28 @@ ActiveExcel::~ActiveExcel(){
 }
 
 
-void ActiveExcel::documentOpen(QVariant path){
+QAxObject* ActiveExcel::documentOpen(QVariant path){
   QAxObject *document;
   if (path == "") document = worcbooks_->querySubObject("Add");
   else document = worcbooks_->querySubObject("Add(const QVariant &)", path);
-  sheets_ = document->querySubObject( "Sheets" );
 
+  workSheet_ = document->querySubObject("Worksheets");
+  sheets_ = document->querySubObject( "Sheets" );
+ return document;
 }
 
 
 
-QAxObject* ActiveExcel::documentAddSheet( ){
+QAxObject* ActiveExcel::documentAddSheet(QVariant sheetName ){
 
-  return    sheets_->querySubObject("Add");
+    QAxObject *active;
+    active =  sheets_->querySubObject("Add");
+    active->setProperty("Name", sheetName);
+    return active;
 }
 
 QAxObject* ActiveExcel::documentSheetActive( QVariant sheet){
+  //QVariant param = sheets_->dynamicCall("Count()");
     return sheets_->querySubObject( "Item(const QVariant&)", sheet );
 
 }
@@ -113,3 +119,26 @@ void ActiveExcel::sheetCellVerticalAlignment(QAxObject* sheet, QVariant rowCol, 
    if (center == true) rangep->dynamicCall("VerticalAlignment",-4108);
 
 }
+
+
+//
+
+
+void ActiveExcel::sheetProperty(QVariant sheetName,  QAxObject *workbook){
+   //Проверить, есть ли такое имя
+  QAxObject* sheetToCopy = workbook->querySubObject("Worksheets(const QVariant&)", "Старый лист");
+  QAxObject* newSheet = workbook->querySubObject("Worksheets(const QVariant&)", "Старый лист (2)");
+   QVariant param = sheets_->dynamicCall("Count()");
+   QVariant param21 = workSheet_->dynamicCall("Count()");
+   QAxObject* sheetsNew = sheets_->querySubObject("Add");
+    QAxObject* param1 = workSheet_->querySubObject("Add()");
+ param21 = workSheet_->dynamicCall("Count()");
+ QVariant param213 = sheets_->dynamicCall("Codename()");
+   QAxObject *StatSheet = sheets_->querySubObject( "Item(const QVariant&)", sheetName );
+
+
+
+   int i;
+   i++;
+
+ }

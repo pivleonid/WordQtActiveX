@@ -217,10 +217,9 @@ bool ActiveWord::documentCheckAndClose( QString docName, bool save){
 }
 
 //----------------------------------------------------------
-void ActiveWord::documentSave(QAxObject *document, QString fileName,
-                                   QString fileFormat, QString path)
+void ActiveWord::documentSave(QAxObject *document, QString path, QString fileName, QString fileFormat)
 {
-    QString all = path + fileName + fileFormat;
+    QString all = path + fileName + "." +fileFormat;
     QVariant param(all);
     document -> dynamicCall("SaveAs2(const QVariant&)", param);
 }
