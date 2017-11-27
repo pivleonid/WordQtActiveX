@@ -1,0 +1,26 @@
+for(int i = 1; i <= count; i++){
+      if(i != 1 + start){
+          if(i == count) return;
+          tableAddLine(table, 1);//добавл€ю строчку
+          firstRow = false;
+        }
+      else firstRow = true;
+      for(int j = 1; j <= tabColumns; j++){
+          
+          if (firstRow == true){
+              if(containerIndex[j-1] == -1) continue;// пропуск не совпадающего символа
+              cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start , j);
+              cell->querySubObject("Range")->dynamicCall("Select()");
+              wordApplication_->querySubObject("Selection")->dynamicCall("TypeText(Text)", tableDat_in[i-1][containerIndex[j-1]]);
+              
+              continue;
+            }
+          if(containerIndex[j-1] == -1) continue;
+          cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start , j);
+          QString cont_i = tableDat_in[i-1][containerIndex[j-1]];
+          cell->querySubObject("Range")->dynamicCall("InsertAfter(const QVariant&)", cont_i );
+          
+          
+          
+        }
+    }

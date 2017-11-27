@@ -2,35 +2,64 @@
 
 ActiveExcel::ActiveExcel()
 {
+  flagConnect = false;
+  flagWorkBooks = false;
   excelApplication_ = new QAxObject( "Excel.Application");
+  if(excelApplication_ != NULL)
+    flagConnect = true;
   excelApplication_->setProperty("DisplayAlerts", false);
-  excelApplication_->setProperty("Visible", true);
+  excelApplication_->setProperty("Visible", false);
   worcbooks_ = excelApplication_->querySubObject( "Workbooks" );
+  if(worcbooks_ != NULL)
+    flagWorkBooks = true;
+  flagClose = false;
 
 
 
 }
+
+
+
 ActiveExcel::~ActiveExcel(){
-  excelApplication_->dynamicCall("Quit()");
-  delete sheets_;
+  if( flagClose == false ) //ежели приложение не было закрыто
+    excelApplication_->dynamicCall("Quit()");
+
   delete worcbooks_;
   delete excelApplication_;
 }
 
 
-QAxObject* ActiveExcel::documentOpen(QVariant path){
+QAxObject* ActiveExcel::workbookOpen(QVariant path){
   QAxObject *document;
   if (path == "") document = worcbooks_->querySubObject("Add");
   else document = worcbooks_->querySubObject("Add(const QVariant &)", path);
+  if(document != NULL){
+      workSheet_ = document->querySubObject("Worksheets");
+      if(workSheet_ == NULL)
+        return NULL;
+      sheets_ = document->querySubObject( "Sheets" );
 
-  workSheet_ = document->querySubObject("Worksheets");
-  sheets_ = document->querySubObject( "Sheets" );
+      if(sheets_ == NULL)
+        return NULL;
+    }
  return document;
+}
+
+QStringList ActiveExcel::sheetsList(){
+  int numb = workSheet_->dynamicCall("Count").toInt();
+  QStringList names;
+  for(int i = 1; i < numb+1; i++){
+      QAxObject* sheet = workSheet_->querySubObject("Item(const QVariant &)", QVariant(i));
+      QVariant name = sheet->dynamicCall("Name");
+      names << name.toString();
+      delete sheet;
+    }
+  return names;
 }
 
 
 
-QAxObject* ActiveExcel::documentAddSheet(QVariant sheetName ){
+QAxObject* ActiveExcel::workbookAddSheet(QVariant sheetName ){
 
     QAxObject *active;
     active =  sheets_->querySubObject("Add");
@@ -38,60 +67,70 @@ QAxObject* ActiveExcel::documentAddSheet(QVariant sheetName ){
     return active;
 }
 
-QAxObject* ActiveExcel::documentSheetActive( QVariant sheet){
-  //QVariant param = sheets_->dynamicCall("Count()");
+QAxObject* ActiveExcel::workbookSheetActive( QString sheet){
+
     return sheets_->querySubObject( "Item(const QVariant&)", sheet );
 
 }
 
-//QAxObject* ActiveExcel::documentRemoveSheet(QAxObject* sheet){
-// ActiveWindow.SelectedSheets.Delete
-//}
 
-void ActiveExcel::documentClose(QAxObject* document){
-  document->dynamicCall("Close(wdDoNotSaveChanges)");
-  delete document;
+bool ActiveExcel::workBookClose(QAxObject* workBook){
+  flagClose = true;
+  bool ret = workBook->dynamicCall("Close(wdDoNotSaveChanges)").toBool();
+  delete workBook;
+  return ret;
 
 }
 
-void ActiveExcel::documentCloseAndSave(QAxObject *document, QVariant path){
-      document -> dynamicCall("SaveAs(const QVariant&)", path);
+bool ActiveExcel::workbookCloseAndSave(QAxObject *document, QVariant path){
+      bool ret = document -> dynamicCall("SaveAs(const QVariant&)", path).toBool();
       document->dynamicCall("Close(wdDoNotSaveChanges)");
+      flagClose = true;
       delete document;
+      return ret;
 }
 //---------------------------------------------------------------------------------
 void ActiveExcel::sheetCellPaste(QAxObject* sheet, QVariant string, QVariant row, QVariant col ){
   QAxObject* cell = sheet->querySubObject("Cells(QVariant,QVariant)", row , col);
-  cell->setProperty("Value", string);
+  bool ret = cell->setProperty("Value", string);
   delete cell;
 
 }
-QVariant ActiveExcel::sheetCellInsert(QAxObject* sheet,  QVariant row, QVariant col){
+bool ActiveExcel::sheetCellInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col){
    QAxObject* cell = sheet->querySubObject("Cells(QVariant,QVariant)", row , col);
-   QVariant result = cell->property("Value");
+   if( cell == NULL)
+     return false;
+   data.clear();
+   data = cell->property("Value");
    delete cell;
-   return result;
+   return true;
 }
 //---------------------------------------------------------------------------------
 
-void ActiveExcel::sheetCopyToBuf(QAxObject* sheet, QVariant rowCol){
+bool ActiveExcel::sheetCopyToBuf(QAxObject* sheet, QVariant rowCol){
   QAxObject* range = sheet->querySubObject( "Range(const QVariant&)", rowCol);
   range->dynamicCall("Select()");
-  range->dynamicCall("Copy()");
+  bool ret = range->dynamicCall("Copy()").toBool();
+  delete range;
+  return ret;
 }
 
-void ActiveExcel::sheetPastFromBuf(QAxObject* sheet, QVariant rowCol){
+bool ActiveExcel::sheetPastFromBuf(QAxObject* sheet, QVariant rowCol){
   QAxObject* rangec = sheet->querySubObject( "Range(const QVariant&)",rowCol);
   rangec->dynamicCall("Select()");
-  rangec->dynamicCall("PasteSpecial()");
+  bool ret = rangec->dynamicCall("PasteSpecial()").toBool();
+  delete rangec;
+  return ret;
 }
 
 //---------------------------------------------------------------------------------
- void ActiveExcel::sheetCellMerge(QAxObject* sheet, QVariant rowCol){
+ bool ActiveExcel::sheetCellMerge(QAxObject* sheet, QVariant rowCol){
     QAxObject* range = sheet->querySubObject( "Range(const QVariant&)", rowCol);
     range->dynamicCall("Select()");
    // устанавливаю свойство объединения.
-    range->dynamicCall("Merge()");
+    bool ret = range->dynamicCall("Merge()").toBool();
+    delete range;
+    return ret;
  }
 
 void ActiveExcel::sheetCellHeightWidth(QAxObject *sheet, QVariant RowHeight, QVariant ColumnWidth, QVariant rowCol){
@@ -101,6 +140,8 @@ void ActiveExcel::sheetCellHeightWidth(QAxObject *sheet, QVariant RowHeight, QVa
    razmer->setProperty("RowHeight",RowHeight);
    razmer = rangec->querySubObject("Columns");
    razmer->setProperty("ColumnWidth",ColumnWidth);
+   delete razmer;
+   delete  rangec;
 }
 
 void ActiveExcel::sheetCellHorizontalAlignment(QAxObject* sheet, QVariant rowCol, bool left, bool right, bool center){
@@ -109,6 +150,7 @@ void ActiveExcel::sheetCellHorizontalAlignment(QAxObject* sheet, QVariant rowCol
   if (left == true)rangep->dynamicCall("HorizontalAlignment",-4152);
   if (right == true)rangep->dynamicCall("HorizontalAlignment",-4131);
   if (center == true) rangep->dynamicCall("HorizontalAlignment",-4108);
+  delete rangep;
 }
 
 void ActiveExcel::sheetCellVerticalAlignment(QAxObject* sheet, QVariant rowCol, bool up, bool down, bool center){
@@ -117,28 +159,28 @@ void ActiveExcel::sheetCellVerticalAlignment(QAxObject* sheet, QVariant rowCol, 
    if (up == true)rangep->dynamicCall("VerticalAlignment",-4160);
    if (down == true)rangep->dynamicCall("VerticalAlignment",-4107);
    if (center == true) rangep->dynamicCall("VerticalAlignment",-4108);
+   delete rangep;
 
 }
 
+QVariant ActiveExcel::sheetName(){
 
-//
-
-
-void ActiveExcel::sheetProperty(QVariant sheetName,  QAxObject *workbook){
-   //Проверить, есть ли такое имя
-  QAxObject* sheetToCopy = workbook->querySubObject("Worksheets(const QVariant&)", "Старый лист");
-  QAxObject* newSheet = workbook->querySubObject("Worksheets(const QVariant&)", "Старый лист (2)");
-   QVariant param = sheets_->dynamicCall("Count()");
-   QVariant param21 = workSheet_->dynamicCall("Count()");
-   QAxObject* sheetsNew = sheets_->querySubObject("Add");
-    QAxObject* param1 = workSheet_->querySubObject("Add()");
- param21 = workSheet_->dynamicCall("Count()");
- QVariant param213 = sheets_->dynamicCall("Codename()");
-   QAxObject *StatSheet = sheets_->querySubObject( "Item(const QVariant&)", sheetName );
+   QAxObject* active = excelApplication_->querySubObject("ActiveSheet");
+   QVariant name = active->dynamicCall("Name");
+   delete active;
+   return name;
+}
 
 
 
-   int i;
-   i++;
+void ActiveExcel::sheetCellColorInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col){
+   QAxObject* cell = sheet->querySubObject("Cells(QVariant,QVariant)", row , col);
+   QAxObject* interior = cell->querySubObject("Interior");
+   data = interior->property("Color");
+   delete interior;
+   delete cell;
+}
 
- }
+
+
+

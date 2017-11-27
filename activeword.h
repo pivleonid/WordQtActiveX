@@ -1,6 +1,7 @@
 /*==================================================================*/
 /*!
 \brief Класс для работы с word'овскими документами при помощи ActiveQt.
+\warning Добавить в .pro файл проекта QT += axcontainer
 Ежели функция возвращает указатель на NULL, значит не корректная работа.
 \warning При создании/ открытии документа его надо сохранить. Новому
 документу автоматически присваивается индекс = 1; Позиция индекса откры-
@@ -26,18 +27,22 @@ querySubObject() ваша программа и ворд в сумме займ�
 #include "qdebug.h"
 #include "qaxobject.h"
 
+
 class ActiveWord{
 
   QAxObject* wordApplication_; ///< файл ворда
   QAxObject* documents_;       ///< Коллекция документов
+  bool flagWordApp;
+  bool flagdoc;
   //Внутренняя функция.
-  bool selectionFind( QString oldString = "", QString newString = ""   /*!< [in] Старая строкаи строка для замены   */
+  int selectionFind( QString oldString = "", QString newString = ""   /*!< [in] Старая строкаи строка для замены   */
       ,bool searchReg     = false                      /*!< [in] Учитывать регистр   */
       ,bool searchAllWord = false                      /*!< [in] Поиск целого слова  */
       ,bool searchForward = true                       /*!< [in] поиск вперед   */
       ,bool searchFormat  = true                       /*!< [in] Применить форматирование   */
       ,bool clearFormatting = true                     /*!< [in] Очистка предыдущего форматирования   */
       ,int replace = 2  );                             /*!< [in] 0- без замен, 1 = замена первого вхождения, 2 -замена всего   */
+
 
 public:
   /*==================================================================*/
@@ -46,25 +51,38 @@ public:
   */
   ActiveWord();
   /*==================================================================*/
+  /*!  \brief
+  Проверка отрытия word
+  */
+  bool wordConnect(){
+    return (flagdoc & flagWordApp);
+  }
+
+  /*==================================================================*/
   ~ActiveWord();
-  void documentActive(QAxObject* document);
+
+  void closeWordApp();
+  void setVisible();
+  /*==================================================================*/
+  /*!  \brief
+   Выбор активного документа
+  */
+  bool documentActive(QAxObject* document);
   /*==================================================================*/
   /*!  \brief
    Открыть документ
-  \param [in] template_ - true - открыть шаблон, false- создать документ
+  \param [in] Если по умолчанию, ворд только создаст документ
+  D:/var/var.docx
   \return документ.
   */
-  QAxObject* documentOpen( bool template_ );
 
-  QAxObject* documentOpen( bool template_,
-                           QVariant path /*!< [in] D:\\template1.docx   */
-                           );
+  QAxObject* documentOpen( QVariant path = "" );
   /*==================================================================*/
   /*!  \brief
    Закрытие документа без возможности его сохранения
   \param [in] document - открытый документ
   */
-  void documentClose(QAxObject* document);
+  bool documentClose(QAxObject* document);
   /*==================================================================*/
   /*!  \brief
   документ должен быть создан или сохранен функцией documentSave(...);
@@ -88,17 +106,43 @@ public:
   \param [in] fileName - имя файла
   \param [in] fileFormat - формат файла
   */
-  void documentSave( QAxObject *document, QString path , QString fileName, QString fileFormat);
+  bool documentSave( QAxObject *document, QString path , QString fileName, QString fileFormat);
+  /*==================================================================*/
+  /*!  \brief
+  Поиск и замена метки
+  \param [in] all =  true замена всех меток. false - замена одной
+  \return bool успех или неудача
+  */
+  bool findReplaseLabel(QString oldString, QString newString, bool all);
+  /*==================================================================*/
+  /*!  \brief
+  Функция открывает доступ к колонтитулам, но не работает !?
+  \param [in] all =  true замена всех меток. false - замена одной
+  \return bool успех или неудача
+  */
+  bool findReplaseLabelInColontituls(QString oldString, QString newString, bool all);
+  /*==================================================================*/
+  /*!  \brief
+  Замена меток в колонтитулах
+  \param [in] doc = указатель на созданный документ
+  \param [in] firstPage  true (замена только в на первой странице), false - на всех остальных
+  \return bool успех или неудача
+  */
+  int colontitulReplaseLabel( QAxObject* doc, QString oldString, QString newString, bool firstPage);
+
+
   //----------------------------------------------------------
   /*! \brief Операции с выделенной областью*/
   //----------------------------------------------------------
+
+
   /*==================================================================*/
   /*!  \brief
    Вставка всего текста из первого документа в метку второго документа
   \return true- метка есть и замена произведена, false метка в исходном
   документе не обнаружена
   */
-  void selectionPasteText(QVariant string);
+  bool selectionPasteText(QVariant string);
   /*==================================================================*/
   /*!  \brief
    Вставка всего текста из первого документа в метку второго документа
@@ -151,8 +195,10 @@ QVariant selectionFindSize(QString string, QVariant fontSize, bool allText);
   \param [in] FontName - "Times New Roman" по умолчанию
   \return тип selection
   */
-QVariant selectionFindFontname(QString string,  bool allText,bool bold = false,
-                                   bool italic = false, bool underline = false, QString FontName = "Times New Roman");
+int selectionFindFontname(QString string,  bool allText,bool bold = false,
+                               bool italic = false, bool underline = false, QString fontName = "Arial" );
+
+int selectionAlign( QString string, bool left, bool right, bool center );
   /*==================================================================*/
   /*!  \brief
   Выделение всего текста с возмождностью копирования в буфер
@@ -166,7 +212,7 @@ void selectionCopyAllText(bool buffer);
   \param [in] wordSelection - выделенный текст
   \return тип selection
   */
-  void selectionPasteTextFromBuffer(void);// выделенный текст
+  bool selectionPasteTextFromBuffer(void);// выделенный текст
   void selectionPasteTextFromBuffer(QString findLabel);// вставка в метку
 //----------------------------------------------------------
 /*! \brief Операции c таблицами*/
@@ -190,9 +236,10 @@ void selectionCopyAllText(bool buffer);
   //QStringList tableGetLabels(int tableIndex);
   /*==================================================================*/
   /*!  \brief
-  Возвращает количество и список меток в таблице.
+  Возвращает количество и список !меток!  в таблице.
+  Пример метки: [label]
   */
-  void tableFill(QList<QStringList> tableDat_in,/*!< [in] Таблица для вставки */
+  int tableFill(QList<QStringList> tableDat_in,/*!< [in] Таблица для вставки */
                  QStringList tableLabel,        /*!< [in] Список всех меток  */
                  int tableIndex,                /*!< [in] индекс таблицы  */
                  int tabRow                     /*!< [in] номер шаблонный строки в таблице  */
@@ -209,6 +256,9 @@ void selectionCopyAllText(bool buffer);
   Внимание! Кол-во объединенных ячеек вправо- начинаются с 1. А вниз с 0!
   */
   void tableMergeCell(int tableIndex, QVariant label, QVariant string, int numberCol, int numberStr);
+
+  QVariant tablesCount();
+
 
 
 

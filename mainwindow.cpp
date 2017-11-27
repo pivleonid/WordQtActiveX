@@ -6,7 +6,7 @@
 #include "qdebug.h"
 
 #include <windows.h>
-
+#include <qmessagebox.h>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,81 +16,57 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
 
 
-//  ActiveExcel excel;
-//  QAxObject* workbook = excel.documentOpen("D:\\testil.xlsx");
-//  QAxObject* sheet = excel.documentSheetActive("Лист1");
-//  excel.sheetCellPaste(sheet, "hi",1,1); //запись в ячейку A1
-//  excel.documentAddSheet("Лист-хуист");
-//  excel.documentAddSheet();
-//  sheet = excel.documentSheetActive("Лист-хуист");
-//  excel.sheetCellPaste(sheet, "hi111",1,1); //запись в ячейку A1
-//  //excel.sheetProperty("name13", workbook);
-
-//  excel.documentAddSheet();
-//  sheet = excel.documentSheetActive("Лист2");
-//  excel.sheetCellPaste(sheet, "hi1",1,1); //запись в ячейку A1
-
-//  QVariant a = excel.sheetCellInsert(sheet, 1 ,1); //"a" хранит значение ячейки листа 2
-//  sheet = excel.documentSheetActive("Лист1"); //переключаемся на лист1
-//  excel.sheetCopyToBuf(sheet, "B2:C16"); // копирование в буфер
+//  QStringList strListNamelabel;
+//  strListNamelabel << "[Устройства]" << "[Конденсаторы]"<<"[Микросхемы]"<<"[Светодиоды]"<<"[Дроссели]"<<"[Резисторы]"<<"[Коммутация]"<<"[Диоды]"<<"[Транзисторы]"<<"[Контактные соединения]"<<"[Фильтры]"<<"[Кварцевый резонатор]"<<"[Предохранители]";
 
 //  ActiveWord word;
-//  word.documentOpen(true, "D:\\template1.docx"); //метка label1
-//  word.selectionPasteTextFromBuffer("[label1]");
+//  if(!word.wordConnect()){
+//      QMessageBox msgBox;
+//      msgBox.setText("Word не установлен");
+//      msgBox.exec();
+//      return;
+//    }
+// // QString path = QApplication::applicationDirPath() + "/center.docx";
 
-//  ActiveWord word;
-//   QAxObject* doc1 = word.documentOpen(true, "D:/Otpuck3.docx");
-//   word.selectionFindReplaseAll("[code1]", "1286", false);
-//   word.selectionFindReplaseAll("[code2]", "720-816", false);
-//   word.selectionFindReplaseAll("[nameOrganization]", "НПП ГАММА", false);
-//   word.selectionFindReplaseAll("[post]", "Руководитель отдела разработки ПО", false);
-//   word.selectionFindReplaseAll("[numberDoc]", "1", false);
-//   word.selectionFindReplaseAll("[date]", "12.07.1993", false);
-//   word.selectionFindReplaseAll("[year]", "17", false);
+//  QString path = "D:/projects/WordQtActiveX-master/center.docx";
 
+//  QAxObject* doc1 = word.documentOpen(path);
+//  if(doc1 == NULL){
+//      QMessageBox msgBox;
+//        msgBox.setText("Не найден шаблон");
+//        msgBox.exec();
+//    return;
+//    }
+//   word.setVisible();
+//   word.tableSizeRows(1,1);
+//  foreach (QString var, strListNamelabel) {
+//      //подчеркивание
+//      QVariant a = word.selectionFindFontname(var, true, false, true, true, "GOST type B");
+//      //центрирование
+//      word.selectionAlign(var , false, false, true);
+//      QString s = var;
+//      s.remove(0,1);
+//      s.remove(s.count()-1,1);
+//      QString s1 = var;
+//      // замена меток/
+//      word.findReplaseLabel(s1, s, true);
+//      s.clear();
+//      s1.clear();
+//    }
 
-//   QAxObject* doc2 = word.documentOpen(true, "D:/Otpuck4.docx");
+  ActiveExcel excel;
+  bool tr = excel.excelConnect();
+  QAxObject* workbook = excel.workbookOpen("D:\\testil.xlsx");
+  QAxObject* sheet = excel.workbookSheetActive("Лист1");
+  QVariant dataG, dataY, dataR, data_, dataB;
+   excel.setVisible(true);
+  excel.sheetCellColorInsert(sheet, dataG, 2, 2);
+  excel.sheetCellColorInsert(sheet, dataY, 3, 2);
+  excel.sheetCellColorInsert(sheet, dataR, 4, 2);
+  excel.sheetCellColorInsert(sheet, data_, 5, 2);
+  excel.sheetCellColorInsert(sheet, dataB, 6, 2);
 
-//   QStringList list = word.tableGetLabels(1, 2);
-
-//   QStringList label;
-//   label << "[1]"<<"[2]"<<"[3]"<<"[4]"<<"[5]"<<"[6]"<<"[7]"<<"[8]"<<"[9]";
-
-//   QList<QStringList> table;
-//   QStringList table1;
-//   table1.append("ПКД");
-//   table1.append("Инженер");
-//   table1.append("Кирьянов И.О.");
-//   table1.append( "1");
-//   table1.append("12");
-//   table1.append("12.07.1999");
-//   table1.append("12.07.1999");
-//   table1.append( "документ №3");
-//   table1.append( "12.08.1999");
-//   table.append(table1);
-// //  //
-//    QStringList table2;
-//   table2.append("ПК1Д");
-//   table2.append("Инженер1");
-//   table2.append("Кирьяноasdв И.О.");
-//   table2.append( "112");
-//   table2.append("132");
-//   table2.append("12.07.1999");
-//   table2.append("12.07.1999");
-//   table2.append( "документ №3");
-//   table2.append( "12.08.1999");
-//   table.append(table2);
-
-
-//   word.tableFill(table,label,1, 3); //1 таблица 3 строка
-
-//   word.selectionFindAndPasteBuffer(doc2,doc1, "[lable_tab1]" );
-
-//  word.documentSave(doc1,"D:/", "otpuskFull", "docx");
-
-  ActiveWord word;
-   word.documentOpen(true, "D:\\Freq.docx"); //метка label1
-  word.tableMergeCell(1, "[up_mkv]","Яблочки", 1, 1);
+  excel.workBookClose(workbook);
 
   int i;
   i++;

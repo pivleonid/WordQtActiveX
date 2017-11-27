@@ -3,50 +3,64 @@
 #include <windows.h>
 //----------------------------------------------------------
 ActiveWord::ActiveWord(){
+  flagWordApp = false;
+  flagdoc = false;
   wordApplication_ =  new QAxObject("Word.Application");
- // Sleep(1000);
+  if(wordApplication_ != NULL)
+    flagWordApp = true;
   wordApplication_->setProperty("DisplayAlerts", false);
- // Sleep(1000);
-  wordApplication_->setProperty("Visible", true);
-  //Sleep(1000);
+  wordApplication_->setProperty("Visible", false);
+// Sleep(1000);
   documents_ = wordApplication_->querySubObject("Documents");
+  if(documents_ != NULL)
+    flagdoc = true;
 
+}
+void ActiveWord::setVisible(){
+  wordApplication_->setProperty("Visible", true);
 }
 //----------------------------------------------------------
 ActiveWord::~ActiveWord(){
+
+}
+void ActiveWord::closeWordApp(){
   wordApplication_->dynamicCall("Quit()");
   delete documents_;
   delete wordApplication_;
 }
+
 //----------------------------------------------------------
-void ActiveWord::documentActive(QAxObject *document){
-  document->dynamicCall("Activate()");
+bool ActiveWord::documentActive(QAxObject *document){
+  return (document->dynamicCall("Activate()").toBool());
 }
+
 //----------------------------------------------------------
-QAxObject* ActiveWord::documentOpen(bool template_){
-  if (!template_)
-    return documents_->querySubObject("Add()");
-  return  documents_->querySubObject("Add(D:\\testdot.dot)");
-}
-//----------------------------------------------------------
-QAxObject* ActiveWord::documentOpen(bool template_, QVariant path){
-  if (!template_)
+QAxObject* ActiveWord::documentOpen(QVariant path){
+  if (path == "")
     return documents_->querySubObject("Add()");
   return  documents_->querySubObject("Add(const QVariant &)", path);
 }
 //----------------------------------------------------------
-void ActiveWord::selectionPasteText(QVariant string){
+bool ActiveWord::selectionPasteText(QVariant string){
   QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-  wordSelection->dynamicCall("TypeText(const QVariant&)", string);
+  bool ret = wordSelection->dynamicCall("TypeText(const QVariant&)", string).toBool();
   delete wordSelection;
+  return ret;
 }
 //----------------------------------------------------------
-bool ActiveWord::selectionFind( QString oldString , QString newString
+int ActiveWord::selectionFind( QString oldString , QString newString
                          ,bool searchReg, bool searchAllWord, bool searchForward
                          , bool searchFormat, bool clearFormatting, int replace ){
 
-    QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-    QAxObject* findString =  wordSelection->querySubObject("Find");
+
+
+  //
+   QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+   if(wordSelection == NULL)
+     return -1;
+   QAxObject* findString =  wordSelection->querySubObject("Find");
+   if(findString == NULL)
+     return -2;
     if(clearFormatting)
       findString->dynamicCall("ClearFormatting()");
     QList<QVariant> params;//Все параметры не обязательные!
@@ -76,7 +90,7 @@ bool ActiveWord::selectionFind( QString oldString , QString newString
                       params);
     delete findString;
     delete wordSelection;
-    return param.toBool();
+    return param.toInt();
 }
 //----------------------------------------------------------
 bool ActiveWord::selectionFindAndPasteBuffer(QAxObject *document1, QAxObject *document2, QString findLabel){
@@ -139,11 +153,21 @@ QVariant ActiveWord:: selectionFindSize(QString string, QVariant fontSize, bool 
   return selectionFind( string, string,false,false,true,true, true, 1 );
 }
 //----------------------------------------------------------
-QVariant ActiveWord:: selectionFindFontname(QString string,  bool allText, bool bold,
+int ActiveWord:: selectionFindFontname(QString string,  bool allText, bool bold,
                                               bool italic , bool underline, QString fontName )
 {
+  if(allText)
+   bool ret = selectionFind( string, string,false,false,true,true, true, 2 );
+  bool ret = selectionFind( string, string,false,false,true,true, true, 1 );
+  if (ret == false)
+    return -1;
+
   QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+  if (wordSelection == NULL)
+    return -2;
   QAxObject* findString =  wordSelection->querySubObject("Find"); // заменить в одну строчку
+  if (findString == NULL)
+    return -3;
   findString->dynamicCall("ClearFormatting()");
   //получаем доступ к параметрам для замены
   QAxObject* replacement = findString->querySubObject("Replacement");
@@ -160,10 +184,65 @@ QVariant ActiveWord:: selectionFindFontname(QString string,  bool allText, bool 
   delete replacement;
   delete findString;
   delete wordSelection;
-  if(allText)
-    return selectionFind( string, string,false,false,true,true, true, 2 );
-  return  selectionFind( string, string,false,false,true,true, true, 1 );
+  return 0;
+
 }
+//----------------------------------------------------------
+int ActiveWord::selectionAlign(QString string, bool left, bool right, bool center){
+
+
+QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
+if (wordSelection == NULL)
+  return -1;
+QAxObject* findString =  wordSelection->querySubObject("Find");
+if (findString == NULL)
+  return -2;
+ findString->dynamicCall("ClearFormatting()");
+ QList<QVariant> params;//Все параметры не обязательные!
+ params.operator << (QVariant(string)); //не обязательный параметр- можно использовать ""
+ params.operator << (QVariant(true)); //учитывать регистр
+ params.operator << (QVariant(true));//Найти целые слова
+ params.operator << (QVariant(false));// использовать подстанровочные знаки (?)
+ params.operator << (QVariant(false));//звуки
+ params.operator << (QVariant(false));//все словоформы
+ params.operator << (QVariant(true));// вперед (поиск)
+ params.operator << (QVariant("1"));// 0 =  операция поиска заканчивается, 1 = операция поиска продолжается ,
+ //если достигнут начало или конец диапазона поиска
+ params.operator << (QVariant(true)); //(Для применения форматирования необходимо TRUE)
+ params.operator << (QVariant(string));//Текст для замены
+ params.operator << (QVariant(0)); //2 = Замена всех; 1 = Замена первого; 0 = без замен.
+ params.operator << (QVariant(true)); //облако пафоса
+ params.operator << (QVariant(true)); //облако пафоса
+ params.operator << (QVariant(true)); //облако пафоса
+ params.operator << (QVariant(true)); //облако пафоса
+ QVariant param =    findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
+                   "const QVariant&,const QVariant&,"
+                   "const QVariant&,const QVariant&,"
+                   "const QVariant&,const QVariant&,"
+                   "const QVariant&,const QVariant&,"
+                   "const QVariant&,const QVariant&,"
+                   "const QVariant&,const QVariant&,const QVariant&)",
+                   params);
+
+QAxObject* paragraph;
+if (left == true){
+    paragraph = wordSelection->querySubObject("ParagraphFormat");
+    paragraph->setProperty("Alignment","wdAlignParagraphLeft" );
+
+  }
+if (right == true){
+    paragraph = wordSelection->querySubObject("ParagraphFormat");
+    paragraph->setProperty("Alignment","wdAlignParagraphRight" );
+  }
+if (center == true){
+    paragraph = wordSelection->querySubObject("ParagraphFormat");
+    paragraph->setProperty("Alignment","wdAlignParagraphCenter" );
+  }
+ delete findString;
+ delete paragraph;
+ delete wordSelection;
+}
+
 //-----------------Возвращает указатель на объект типа selection
 void ActiveWord:: selectionCopyAllText( bool buffer){
     QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
@@ -175,10 +254,11 @@ void ActiveWord:: selectionCopyAllText( bool buffer){
 }
 
 //------------------Вставка текста из буфера
-void ActiveWord:: selectionPasteTextFromBuffer(){
+bool ActiveWord:: selectionPasteTextFromBuffer(){
   QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-  wordSelection->dynamicCall("Paste()");
+  bool ret = wordSelection->dynamicCall("Paste()").toBool();
   delete wordSelection;
+  return ret;
 }
 //------------------Вставка текста из буфера в метку
 void ActiveWord:: selectionPasteTextFromBuffer(QString findLabel){
@@ -187,8 +267,8 @@ void ActiveWord:: selectionPasteTextFromBuffer(QString findLabel){
   selectionPasteTextFromBuffer();
 }
 //----------------------------------------------------------
-void ActiveWord::documentClose(QAxObject* document){
-        document->dynamicCall("Close(wdDoNotSaveChanges)");
+bool ActiveWord::documentClose(QAxObject* document){
+        return( document->dynamicCall("Close(wdDoNotSaveChanges)").toBool());
 }
 //----------------------------------------------------------
 void ActiveWord::documentIndexClose(QAxObject* index, bool save){
@@ -216,11 +296,11 @@ bool ActiveWord::documentCheckAndClose( QString docName, bool save){
 }
 
 //----------------------------------------------------------
-void ActiveWord::documentSave(QAxObject *document, QString path, QString fileName, QString fileFormat)
+bool ActiveWord::documentSave(QAxObject *document, QString path, QString fileName, QString fileFormat)
 {
     QString all = path + fileName + "." +fileFormat;
     QVariant param(all);
-    document -> dynamicCall("SaveAs2(const QVariant&)", param);
+    return(document -> dynamicCall("SaveAs2(const QVariant&)", param).toBool());
 }
 //----------------------------------------------------------
 //----------------------------------------------------------
@@ -284,6 +364,8 @@ QStringList ActiveWord::tableGetLabels(int tableIndex, int tabRow ){
        QString str = str_v.toString();
        int index = str.indexOf("]", 0 );
        str = str.mid(0, index+1);
+       if(str.isEmpty())
+         continue;
        lable << str;
      }
    delete cell;
@@ -300,10 +382,15 @@ void ActiveWord::tableAddLine(QAxObject* table){
   delete rows;
 }
 
-void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabel, int tableIndex, int start){
+//tableLabel метки могут не совпадать с метками в шаблонном документе
+int ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabel, int tableIndex, int start){
 
   QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+  if( act == NULL)
+    return -1;
   QAxObject* tables = act->querySubObject("Tables");
+  if( tables == NULL)
+    return -2;
   //список меток из шаблонной таблицы
   QStringList templateTableLabel = tableGetLabels(tableIndex, start);
 
@@ -314,27 +401,51 @@ void ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabe
     //containerIndex.append(templateTableLabel.indexOf(tableLabel[i]));
     containerIndex.append(tableLabel.indexOf(templateTableLabel[i]));
   QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
-  const int count = tableDat_in.count(); //строчки
-  QAxObject* cell;
+  if( table == NULL)
+    return -3;
+  //количество добаввленных строк
+  const int count = tableDat_in.count();
+
   for(int i = 1; i <= count; i++){
       if(i != 1 + start){
           if(i == count+1)
-            return;
+            return 0;
           tableAddLine(table);//добавляю строчку
         }
       for(int j = 1; j <= tabColumns; j++){
-
-          if(containerIndex[j-1] == -1) continue;
-          cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start-1 , j);
+          //ежели элемент не найден в таблице меток
+          if(containerIndex[j-1] == -1)
+            continue;
+          if( tableDat_in[j].count() < j)
+            continue;
+          //b = tableDat_in[i].count();
+          QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start-1 , j);
+          if( cell == NULL)
+            return -4;
           cell->querySubObject("Range")->dynamicCall("Select()");
-          wordApplication_->querySubObject("Selection")->dynamicCall("TypeText(Text)", tableDat_in[i-1][containerIndex[j-1]]);
-
+          //если метка стоит, а замещающая строка пустая - то метка останется!
+          if( i == 1){ //сделать только в первом прогоне
+            QAxObject* sel =wordApplication_->querySubObject("Selection");
+            if( sel == NULL)
+              return -5;
+            sel->dynamicCall("Cut()");
+            sel->dynamicCall("TypeText(Text)", tableDat_in[i-1][containerIndex[j-1]]);
+            delete sel;
+            delete cell;
+            continue;
+            }
+          QAxObject* sel = wordApplication_->querySubObject("Selection");
+          if( sel == NULL)
+            return -6;
+          sel->dynamicCall("TypeText(Text)", tableDat_in[i-1][containerIndex[j-1]]);
+          delete sel;
+          delete cell;
         }
     }
-  delete cell;
   delete table;
   delete tables;
   delete act;
+  return 0;
 }
 
 
@@ -354,7 +465,7 @@ void ActiveWord::tableMergeCell(int tableIndex, QVariant label, QVariant str, in
   //
   QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
   QAxObject* findString =  wordSelection->querySubObject("Find");
-    findString->dynamicCall("ClearFormatting()");
+  findString->dynamicCall("ClearFormatting()");
   QList<QVariant> params;//Все параметры не обязательные!
   params.operator << (QVariant(label)); //не обязательный параметр- можно использовать ""
   params.operator << (QVariant(false)); //учитывать регистр
@@ -373,25 +484,120 @@ void ActiveWord::tableMergeCell(int tableIndex, QVariant label, QVariant str, in
   params.operator << (QVariant(true)); //облако пафоса
   params.operator << (QVariant(true)); //облако пафоса
   QVariant param =    findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
-                    "const QVariant&,const QVariant&,"
-                    "const QVariant&,const QVariant&,"
-                    "const QVariant&,const QVariant&,"
-                    "const QVariant&,const QVariant&,"
-                    "const QVariant&,const QVariant&,"
-                    "const QVariant&,const QVariant&,const QVariant&)",
-                    params);
-//
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,const QVariant&)",
+                                              params);
+  //
   wordSelection->dynamicCall("SelectCell");
 
   wordSelection->dynamicCall("MoveRight(const QVariant&, const QVariant&, const QVariant&)", 1, numberCol, 1) ;
   wordSelection->dynamicCall("MoveDown(const QVariant&, const QVariant&, const QVariant&)", 5 , numberStr, 1 );
 
-   QAxObject* cells =  wordSelection->querySubObject("Cells");
-   cells->dynamicCall("Merge()");
+  QAxObject* cells =  wordSelection->querySubObject("Cells");
+  cells->dynamicCall("Merge()");
 
-    wordSelection->dynamicCall("Delete(wdCharacter, 1)");
-   wordSelection->dynamicCall("TypeText(const QVariant&)", str);
-  int i;
-  i++;
+  wordSelection->dynamicCall("Delete(wdCharacter, 1)");
+  wordSelection->dynamicCall("TypeText(const QVariant&)", str);
+
+  delete cells;
+  delete findString;
+  delete wordSelection;
+  delete table;
+  delete tables;
+  delete act;
 
 }
+
+
+
+QVariant ActiveWord::tablesCount(){
+   QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+   QAxObject* tables = act->querySubObject("Tables");
+   QVariant count = tables->dynamicCall("Count");
+   delete tables;
+   delete act;
+   return count;
+}
+
+
+bool ActiveWord::findReplaseLabel(QString oldString, QString newString, bool all){
+  if (all == true)
+    return selectionFind(  oldString,  newString, true, true, true, true, true,2);
+
+  if(all == false)
+    return selectionFind(  oldString,  newString, false, false, true, true, true,1);
+
+}
+bool ActiveWord::findReplaseLabelInColontituls(QString oldString, QString newString, bool all){
+  //ActiveWindow.ActivePane.View.SeekView = wdSeekCurrentPageFooter //10
+  QAxObject* activwin = wordApplication_->querySubObject("ActiveWindow");
+  QAxObject* pane = activwin->querySubObject("ActivePane");
+  QAxObject* view = pane->querySubObject("View");
+  view->setProperty("SeekView", 10);
+  view->setProperty("SeekView", 9);
+
+  if (all == true)
+   return selectionFind(  oldString,  newString, false, false, true, true, true,2);
+
+
+  if(all == false)
+      return selectionFind(  oldString,  newString, false, false, true, true, true,1);
+
+}
+
+int ActiveWord::colontitulReplaseLabel( QAxObject* doc, QString oldString, QString newString, bool firstPage){
+  QAxObject* stor = doc->querySubObject("StoryRanges");
+  if(stor == NULL)
+    return -1;
+  QAxObject*  range;
+  if(firstPage == true)
+    range = stor->querySubObject("Item( wdFirstPageFooterStory )" ); // последующие стр wdPrimaryFooterStory
+  if(firstPage == false)
+    range = stor->querySubObject("Item( wdPrimaryFooterStory )" ); // последующие стр wdPrimaryFooterStory
+  if(range == NULL)
+    return -2;
+  QAxObject*  findString =  range->querySubObject("Find");
+  if(findString == NULL)
+    return -3;
+  QList<QVariant> params;//Все параметры не обязательные!
+  params.operator << (QVariant(oldString)); //не обязательный параметр- можно использовать ""
+  params.operator << (QVariant(false)); //учитывать регистр
+  params.operator << (QVariant(true));//Найти целые слова
+  params.operator << (QVariant(false));// использовать подстанровочные знаки (?)
+  params.operator << (QVariant(false));//звуки
+  params.operator << (QVariant(false));//все словоформы
+  params.operator << (QVariant(true));// вперед (поиск)
+  params.operator << (QVariant("1"));// 0 =  операция поиска заканчивается, 1 = операция поиска продолжается ,
+  //если достигнут начало или конец диапазона поиска
+  params.operator << (QVariant(true)); //(Для применения форматирования необходимо TRUE)
+  params.operator << (QVariant(newString));//Текст для замены
+  params.operator << (QVariant(2)); //2 = Замена всех; 1 = Замена первого; 0 = без замен.
+  params.operator << (QVariant(true)); //облако пафоса
+  params.operator << (QVariant(true)); //облако пафоса
+  params.operator << (QVariant(true)); //облако пафоса
+  params.operator << (QVariant(true)); //облако пафоса
+  findString->dynamicCall("Execute(const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,"
+                                              "const QVariant&,const QVariant&,const QVariant&)",
+                                              params);
+
+  delete range;
+  delete stor;
+  return 0;
+
+
+    }
+
+
+
+
+
+

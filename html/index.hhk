@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD></HEAD><BODY>
+<OBJECT type="text/site properties">
+<param name="FrameName" value="right">
+</OBJECT>
+<UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html"><param name="Name" value="ActiveExcel"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a996a10960855f7bbd6a0cf8def4546cf"><param name="Name" value="documentAddSheet"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a7be6d6cfc05409fd23d9ae0dff95353b"><param name="Name" value="documentClose"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ab3bf3535715a62ca818013cd9d8cd05a"><param name="Name" value="documentCloseAndSave"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a242078db018fc05b2b975c406d26be73"><param name="Name" value="documentGetSheet"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a64a459d7894744a4e879670db82692f7"><param name="Name" value="documentOpen"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a259dc8f89d7d93726c2fd9ef86a53044"><param name="Name" value="documentSheetActive"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a5c4341cd4fd4eaceab92eef20991b0ab"><param name="Name" value="sheetCellHeightWidth"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a07229b0542e5fa9bbb8d795a1c84c831"><param name="Name" value="sheetCellHorizontalAlignment"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ad0e7d4faad5ac5b1d476b2112e835636"><param name="Name" value="sheetCellInsert"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a98c0020e0eabd459872b07a0247e2482"><param name="Name" value="sheetCellMerge"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ae6e242799d2be9d766f053ed01286b48"><param name="Name" value="sheetCellPaste"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a5c0660c91b28d1d7ce550789104c90e9"><param name="Name" value="sheetCellVerticalAlignment"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ab2ef703bfeed8edd98005bff2fafa0b3"><param name="Name" value="sheetCopyToBuf"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a1d363f3394905392c98e3ba78bc6588a"><param name="Name" value="sheetPastFromBuf"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html"><param name="Name" value="ActiveWord"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#ae188e2bf603d03d6cd2cbb284749da2a"><param name="Name" value="ActiveWord"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#aa521363ea4cf23effb20e9cd067fa519"><param name="Name" value="documentActive"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#aa891183cf73a7b63a60e9d9c8674c360"><param name="Name" value="documentCheckAndClose"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a496e3f8347f6709f0ff529966c97d082"><param name="Name" value="documentClose"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a32aea81a77cbeb1128fc748d7ab2b86a"><param name="Name" value="documentIndexClose"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#ac476c967a4aa37247c8f67c3de718ecb"><param name="Name" value="documentOpen"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a7110826e86e73e9fcf43cb01911bc206"><param name="Name" value="documentSave"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a259d1196084b9e47b4d5eb70b1c4fb4f"><param name="Name" value="selectionCopyAllText"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#adee30d193b3278f864cc7c71c66db792"><param name="Name" value="selectionFindAndPasteBuffer"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a8b48d7c2a58e5cf32f5fef13c9ee87ea"><param name="Name" value="selectionFindColor"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a2426ad4ed6fad216c3d2fe8671f0fc4b"><param name="Name" value="selectionFindFontname"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#ab4b6675d0e538b18d04f419283bd5164"><param name="Name" value="selectionFindReplaseAll"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a9a438b023c04f05101a2686beb2f5585"><param name="Name" value="selectionFindSize"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a2369abb7672dba291c9542a971f6b437"><param name="Name" value="selectionPasteText"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a5681b16c0f80e616d0fdbc187ad271a1"><param name="Name" value="selectionPasteTextFromBuffer"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a54b0d306d9ba5217f76b45944d3fd5c3"><param name="Name" value="tableAddLine"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a03bd81dd1251617cfa32cb82f98872d2"><param name="Name" value="tableFill"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a61baf0abcfc2e1d2de3e92a05eca3b48"><param name="Name" value="tableGetLabels"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a18b36014a0613fecc40c6ca0b9c43184"><param name="Name" value="tablePaste"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a8d6e8aa40990a0f496a31c419e0849f8a39892314c5f58ec0115b8f87d5fff1d7"><param name="Name" value="wdBlack"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a30075506c2116c3ed4ff25e07ae75f81"><param name="Name" value="centralWidget"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#aa521363ea4cf23effb20e9cd067fa519"><param name="Name" value="documentActive"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a996a10960855f7bbd6a0cf8def4546cf"><param name="Name" value="documentAddSheet"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#aa891183cf73a7b63a60e9d9c8674c360"><param name="Name" value="documentCheckAndClose"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a7be6d6cfc05409fd23d9ae0dff95353b"><param name="Name" value="documentClose"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a7be6d6cfc05409fd23d9ae0dff95353b"><param name="Name" value="ActiveExcel"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a496e3f8347f6709f0ff529966c97d082"><param name="Name" value="ActiveWord"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ab3bf3535715a62ca818013cd9d8cd05a"><param name="Name" value="documentCloseAndSave"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a242078db018fc05b2b975c406d26be73"><param name="Name" value="documentGetSheet"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a32aea81a77cbeb1128fc748d7ab2b86a"><param name="Name" value="documentIndexClose"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a64a459d7894744a4e879670db82692f7"><param name="Name" value="documentOpen"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a64a459d7894744a4e879670db82692f7"><param name="Name" value="ActiveExcel"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#ac476c967a4aa37247c8f67c3de718ecb"><param name="Name" value="ActiveWord"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a7110826e86e73e9fcf43cb01911bc206"><param name="Name" value="documentSave"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a259dc8f89d7d93726c2fd9ef86a53044"><param name="Name" value="documentSheetActive"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a525ed3c5fe0784ac502ee222fba4e205"><param name="Name" value="gridLayout"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a5172877001c8c7b4e0f6de50421867d1"><param name="Name" value="mainToolBar"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_main_window.html"><param name="Name" value="MainWindow"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_main_window.html#a8b244be8b7b7db1b08de2a2acb9409db"><param name="Name" value="MainWindow"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a2be1c24ec9adfca18e1dcc951931457f"><param name="Name" value="menuBar"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a097dd160c3534a204904cb374412c618"><param name="Name" value="retranslateUi"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a259d1196084b9e47b4d5eb70b1c4fb4f"><param name="Name" value="selectionCopyAllText"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#adee30d193b3278f864cc7c71c66db792"><param name="Name" value="selectionFindAndPasteBuffer"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a8b48d7c2a58e5cf32f5fef13c9ee87ea"><param name="Name" value="selectionFindColor"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a2426ad4ed6fad216c3d2fe8671f0fc4b"><param name="Name" value="selectionFindFontname"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#ab4b6675d0e538b18d04f419283bd5164"><param name="Name" value="selectionFindReplaseAll"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a9a438b023c04f05101a2686beb2f5585"><param name="Name" value="selectionFindSize"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a2369abb7672dba291c9542a971f6b437"><param name="Name" value="selectionPasteText"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a5681b16c0f80e616d0fdbc187ad271a1"><param name="Name" value="selectionPasteTextFromBuffer"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#acf4a0872c4c77d8f43a2ec66ed849b58"><param name="Name" value="setupUi"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a5c4341cd4fd4eaceab92eef20991b0ab"><param name="Name" value="sheetCellHeightWidth"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a07229b0542e5fa9bbb8d795a1c84c831"><param name="Name" value="sheetCellHorizontalAlignment"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ad0e7d4faad5ac5b1d476b2112e835636"><param name="Name" value="sheetCellInsert"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a98c0020e0eabd459872b07a0247e2482"><param name="Name" value="sheetCellMerge"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ae6e242799d2be9d766f053ed01286b48"><param name="Name" value="sheetCellPaste"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a5c0660c91b28d1d7ce550789104c90e9"><param name="Name" value="sheetCellVerticalAlignment"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#ab2ef703bfeed8edd98005bff2fafa0b3"><param name="Name" value="sheetCopyToBuf"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_excel.html#a1d363f3394905392c98e3ba78bc6588a"><param name="Name" value="sheetPastFromBuf"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a50fa481337604bcc8bf68de18ab16ecd"><param name="Name" value="statusBar"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a54b0d306d9ba5217f76b45944d3fd5c3"><param name="Name" value="tableAddLine"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a03bd81dd1251617cfa32cb82f98872d2"><param name="Name" value="tableFill"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a61baf0abcfc2e1d2de3e92a05eca3b48"><param name="Name" value="tableGetLabels"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a18b36014a0613fecc40c6ca0b9c43184"><param name="Name" value="tablePaste"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a2c789c07fa5fc1cee05aae8df52bb02d"><param name="Name" value="textBrowser"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui_1_1_main_window.html"><param name="Name" value="Ui::MainWindow"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html"><param name="Name" value="Ui_MainWindow"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a30075506c2116c3ed4ff25e07ae75f81"><param name="Name" value="centralWidget"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a525ed3c5fe0784ac502ee222fba4e205"><param name="Name" value="gridLayout"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a5172877001c8c7b4e0f6de50421867d1"><param name="Name" value="mainToolBar"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a2be1c24ec9adfca18e1dcc951931457f"><param name="Name" value="menuBar"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a097dd160c3534a204904cb374412c618"><param name="Name" value="retranslateUi"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#acf4a0872c4c77d8f43a2ec66ed849b58"><param name="Name" value="setupUi"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a50fa481337604bcc8bf68de18ab16ecd"><param name="Name" value="statusBar"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="class_ui___main_window.html#a2c789c07fa5fc1cee05aae8df52bb02d"><param name="Name" value="textBrowser"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="class_active_word.html#a8d6e8aa40990a0f496a31c419e0849f8a39892314c5f58ec0115b8f87d5fff1d7"><param name="Name" value="wdBlack"></OBJECT>
+</UL>
+</BODY>
+</HTML>
