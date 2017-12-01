@@ -178,6 +178,9 @@ public:
   \return  имя активного листа
   */
   void sheetCellColorInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col);
+
+
+  void addTable();
 };
 
 

@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //  QStringList strListNamelabel;
 //  strListNamelabel << "[Устройства]" << "[Конденсаторы]"<<"[Микросхемы]"<<"[Светодиоды]"<<"[Дроссели]"<<"[Резисторы]"<<"[Коммутация]"<<"[Диоды]"<<"[Транзисторы]"<<"[Контактные соединения]"<<"[Фильтры]"<<"[Кварцевый резонатор]"<<"[Предохранители]";
 
-//  ActiveWord word;
+  ActiveWord word;
 //  if(!word.wordConnect()){
 //      QMessageBox msgBox;
 //      msgBox.setText("Word не установлен");
@@ -30,7 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //  QString path = "D:/projects/WordQtActiveX-master/center.docx";
 
-//  QAxObject* doc1 = word.documentOpen(path);
+  QAxObject* doc1 = word.documentOpen("D:/1.docx");
+  word.setVisible();
+  word.tableAddColumn(1,2, "Text", 1);
+  int i;
+  i++;
 //  if(doc1 == NULL){
 //      QMessageBox msgBox;
 //        msgBox.setText("Не найден шаблон");
@@ -54,26 +58,27 @@ MainWindow::MainWindow(QWidget *parent) :
 //      s1.clear();
 //    }
 
-  ActiveExcel excel;
-  bool tr = excel.excelConnect();
-  QAxObject* workbook = excel.workbookOpen("D:\\testil.xlsx");
-  QAxObject* sheet = excel.workbookSheetActive("Лист1");
-  QVariant dataG, dataY, dataR, data_, dataB;
-   excel.setVisible(true);
-  excel.sheetCellColorInsert(sheet, dataG, 2, 2);
-  excel.sheetCellColorInsert(sheet, dataY, 3, 2);
-  excel.sheetCellColorInsert(sheet, dataR, 4, 2);
-  excel.sheetCellColorInsert(sheet, data_, 5, 2);
-  excel.sheetCellColorInsert(sheet, dataB, 6, 2);
+//  ActiveExcel excel;
+//  bool tr = excel.excelConnect();
+//  QAxObject* workbook = excel.workbookOpen("D:\\testil.xlsx");
+//  QAxObject* sheet = excel.workbookSheetActive("Лист1");
+//  QVariant dataG, dataY, dataR, data_, dataB;
+//   excel.setVisible(true);
+//  excel.sheetCellColorInsert(sheet, dataG, 2, 2);
+//  excel.sheetCellColorInsert(sheet, dataY, 3, 2);
+//  excel.sheetCellColorInsert(sheet, dataR, 4, 2);
+//  excel.sheetCellColorInsert(sheet, data_, 5, 2);
+//  excel.sheetCellColorInsert(sheet, dataB, 6, 2);
 
-  excel.workBookClose(workbook);
+//  excel.workBookClose(workbook);
 
-  int i;
-  i++;
+//  int i;
+//  i++;
 
 
 
 }
+
 MainWindow::~MainWindow()
 {
   delete ui;
