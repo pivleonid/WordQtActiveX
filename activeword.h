@@ -255,32 +255,21 @@ void selectionCopyAllText(bool buffer);
   Объединение ячеек в таблице.
   Внимание! Кол-во объединенных ячеек вправо- начинаются с 1. А вниз с 0!
   */
-  void tableMergeCell(int tableIndex, QVariant label, QVariant string, int numberCol, int numberStr);
+  int tableMergeCell(int tableIndex, QVariant label, int numberCol, int numberStr);
 
   QVariant tablesCount();
 
 
-  void tableAddColumn(int indexTable, int afterColumn, QString text, int row){
-      QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
-      QAxObject* tables = act->querySubObject("Tables");
-      //индекс указывает на искомую таблицу
-      QAxObject* table = tables->querySubObject("Item(const QVariant&)", indexTable);
-       QAxObject* columns =  table->querySubObject("Columns");
-      QAxObject* col = columns->querySubObject("Item(const QVariant&)", afterColumn);
-      col->dynamicCall("Select()");
-       //Selection.InsertColumnsRight
-       QAxObject* wordSelection = wordApplication_->querySubObject("Selection");
-       wordSelection->dynamicCall("InsertColumnsRight()");
+  //Добавление колонки с меткой
+  int tableAddColumn(int indexTable,   /*!< [in] индекс таблицы */
+                      int afterColumn,  /*!< [in] после какой колонки надо вставить колонку? */
+                      QString text,     /*!< [in] название новой колонки */
+                      QString label,    /*!< [in] метка колонки */
+                      int row          /*!< [in] номер строки для вствки колонки*/
+                                    );
 
-
-       //вставка метки в ячейку
-       QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",row ,afterColumn + 1);
-       cell->querySubObject("Range")->dynamicCall("Select()");
-       QAxObject* sel =wordApplication_->querySubObject("Selection");
-       sel->dynamicCall("TypeText(Text)", QVariant(text));
-  }
-
-
+  //Добавляет строку и string в таблицу, где number - номер ячейки
+  int tableAddLineWithText(int tableIndex,  int number, QString string);
 
 };
 

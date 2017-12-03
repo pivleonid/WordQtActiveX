@@ -74,7 +74,7 @@ QAxObject* ActiveExcel::workbookSheetActive( QString sheet){
 }
 
 
-bool ActiveExcel::workBookClose(QAxObject* workBook){
+bool ActiveExcel::workbookClose(QAxObject* workBook){
   flagClose = true;
   bool ret = workBook->dynamicCall("Close(wdDoNotSaveChanges)").toBool();
   delete workBook;

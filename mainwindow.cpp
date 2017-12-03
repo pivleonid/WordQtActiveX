@@ -32,7 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
   QAxObject* doc1 = word.documentOpen("D:/1.docx");
   word.setVisible();
-  word.tableAddColumn(1,2, "Text", 1);
+  word.tableAddLineWithText(1, 1, "Hello");
+  word.tableCellsMerge(1,1,1,4,4);
   int i;
   i++;
 //  if(doc1 == NULL){

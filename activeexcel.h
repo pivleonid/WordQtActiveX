@@ -94,7 +94,7 @@ public:
   Закрытие документа без сохранения.
   Указатель на документ будет удален внутри функции
   */
-  bool workBookClose(QAxObject* workbook);   /*!< [in] указатель на созданный документ  */
+  bool workbookClose(QAxObject* workbook);   /*!< [in] указатель на созданный документ  */
   /*==================================================================*/
   /*!  \brief
    * указатель на документ будет удален внутри функции
@@ -178,9 +178,6 @@ public:
   \return  имя активного листа
   */
   void sheetCellColorInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col);
-
-
-  void addTable();
 };
 
 
