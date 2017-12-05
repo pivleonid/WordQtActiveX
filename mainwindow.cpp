@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //  QStringList strListNamelabel;
 //  strListNamelabel << "[Устройства]" << "[Конденсаторы]"<<"[Микросхемы]"<<"[Светодиоды]"<<"[Дроссели]"<<"[Резисторы]"<<"[Коммутация]"<<"[Диоды]"<<"[Транзисторы]"<<"[Контактные соединения]"<<"[Фильтры]"<<"[Кварцевый резонатор]"<<"[Предохранители]";
 
-  ActiveWord word;
+//  ActiveWord word;
 //  if(!word.wordConnect()){
 //      QMessageBox msgBox;
 //      msgBox.setText("Word не установлен");
@@ -30,12 +30,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //  QString path = "D:/projects/WordQtActiveX-master/center.docx";
 
-  QAxObject* doc1 = word.documentOpen("D:/1.docx");
-  word.setVisible();
-  word.tableAddLineWithText(1, 1, "Hello");
-  word.tableCellsMerge(1,1,1,4,4);
-  int i;
-  i++;
+//  QAxObject* doc1 = word.documentOpen("D:/1.docx");
+//  word.setVisible();
+//  word.tableAddLineWithText(1, 1, "Hello");
+//  word.tableCellsMerge(1,1,1,4,4);
+//  int i;
+//  i++;
 //  if(doc1 == NULL){
 //      QMessageBox msgBox;
 //        msgBox.setText("Не найден шаблон");
@@ -59,22 +59,26 @@ MainWindow::MainWindow(QWidget *parent) :
 //      s1.clear();
 //    }
 
-//  ActiveExcel excel;
-//  bool tr = excel.excelConnect();
-//  QAxObject* workbook = excel.workbookOpen("D:\\testil.xlsx");
-//  QAxObject* sheet = excel.workbookSheetActive("Лист1");
-//  QVariant dataG, dataY, dataR, data_, dataB;
-//   excel.setVisible(true);
-//  excel.sheetCellColorInsert(sheet, dataG, 2, 2);
-//  excel.sheetCellColorInsert(sheet, dataY, 3, 2);
-//  excel.sheetCellColorInsert(sheet, dataR, 4, 2);
-//  excel.sheetCellColorInsert(sheet, data_, 5, 2);
-//  excel.sheetCellColorInsert(sheet, dataB, 6, 2);
+  ActiveExcel excel;
+  bool tr = excel.excelConnect();
+  QAxObject* workbook = excel.workbookOpen("D:\\testil.xlsx");
+  QAxObject* sheet = excel.workbookSheetActive("Лист1");
+  QVariant dataG, dataY, dataR, data_, dataB;
+   excel.setVisible(true);
+  excel.sheetCellColorInsert(sheet, dataG, 2, 2);
+  excel.sheetCellColorInsert(sheet, dataY, 3, 2);
+  excel.sheetCellColorInsert(sheet, dataR, 4, 2);
+  excel.sheetCellColorInsert(sheet, data_, 5, 2);
+  excel.sheetCellColorInsert(sheet, dataB, 6, 2);
 
-//  excel.workBookClose(workbook);
-
-//  int i;
-//  i++;
+// excel.workbookClose( workbook );
+qDebug() << dataG;
+qDebug() << dataY;
+qDebug() << dataR;
+qDebug() << data_;
+qDebug() << dataB;
+  int i;
+  i++;
 
 
 

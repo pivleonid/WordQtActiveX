@@ -224,10 +224,11 @@ void selectionCopyAllText(bool buffer);
   QVariant tablePaste(QList<QStringList> table, QVariant separator);
   /*==================================================================*/
   /*!  \brief
-  Возвращает список меток в таблице.
+
   */
-  QStringList tableGetLabels(int tableIndex, /*!< [in] индекс таблицы  */
-                             int tabRow      /*!< [in] номер шаблонный строки в таблице  */
+  int tableGetLabels(int tableIndex, /*!< [in] индекс таблицы  */
+                             int tabRow,      /*!< [in] номер шаблонный строки в таблице  */
+                     QStringList&  lable/*!< [out]  Возвращает список меток в таблице. */
                              );
   /*==================================================================*/
   /*!  \brief
@@ -270,6 +271,24 @@ void selectionCopyAllText(bool buffer);
 
   //Добавляет строку и string в таблицу, где number - номер ячейки
   int tableAddLineWithText(int tableIndex,  int number, QString string);
+
+  int tableAutoFitWindow(int tableIndex){
+      QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+      if(act == NULL)
+          return -1;
+      QAxObject* tables = act->querySubObject("Tables");
+      if(tables == NULL)
+          return -2;
+
+      QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
+      if(table == NULL)
+          return -3;
+      table->dynamicCall("AutoFitBehavior(wdAutoFitWindow)");
+      delete table;
+      delete tables;
+      delete act;
+  }
+
 
 };
 

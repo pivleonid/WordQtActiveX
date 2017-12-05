@@ -177,7 +177,7 @@ public:
   /*!  \brief
   \return  имя активного листа
   */
-  void sheetCellColorInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col);
+  int sheetCellColorInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col);
 };
 
 

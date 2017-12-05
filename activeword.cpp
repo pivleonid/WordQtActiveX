@@ -349,15 +349,30 @@ QVariant ActiveWord::tablePaste(QList<QStringList> table, QVariant separator ){
     return param;
 }
 
-QStringList ActiveWord::tableGetLabels(int tableIndex, int tabRow ){
-   QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
-   QAxObject* tables = act->querySubObject("Tables");
+int ActiveWord::tableGetLabels(int tableIndex, int tabRow, QStringList& lable ){
+    int  m = 0;
+m1:
+    QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+    if(act == NULL){
+        m++;
+        goto m1;
+        if(m == 10)
+            return -1;
+    }
+    m = 0;
+m2:
+    QAxObject* tables = act->querySubObject("Tables");
+    if(tables == NULL){
+        m++;
+        goto m2;
+        if(m == 10)
+            return -2;
+    }
    //индекс указывает на искомую таблицу
    QAxObject* table = tables->querySubObject("Item(const QVariant&)", tableIndex);
    int tabColumns = table->querySubObject("Columns")->dynamicCall("count").toInt();
   // QVariant tabRow = table->querySubObject("Rows")->dynamicCall("count");//.toInt();
    QAxObject* cell;
-   QStringList lable;
    for(int i = 1; i <= tabColumns; i++){
        cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",tabRow, i );
        QVariant str_v = cell->querySubObject("Range")->dynamicCall("Text");
@@ -372,7 +387,7 @@ QStringList ActiveWord::tableGetLabels(int tableIndex, int tabRow ){
    delete table;
    delete tables;
    delete act;
-return lable;
+return 0;
 }
 
 void ActiveWord::tableAddLine(QAxObject* table){
@@ -385,15 +400,30 @@ void ActiveWord::tableAddLine(QAxObject* table){
 //tableLabel метки могут не совпадать с метками в шаблонном документе
 int ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabel, int tableIndex, int start){
 
-  QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
-  if( act == NULL)
-    return -1;
-  QAxObject* tables = act->querySubObject("Tables");
-  if( tables == NULL)
-    return -2;
-  //список меток из шаблонной таблицы
-  QStringList templateTableLabel = tableGetLabels(tableIndex, start);
+    int m = 0;
+m1:
+    QAxObject* act = wordApplication_->querySubObject("ActiveDocument");
+    if( act == NULL){
+        m++;
+        if(m == 10)
+            return -1;
+        goto m1;
+    }
+    m = 0;
+m2:
+    QAxObject* tables = act->querySubObject("Tables");
+    if( tables == NULL){
+        m++;
+        if(m == 10)
+            return -2;
+        goto m2;
 
+    }
+  //список меток из шаблонной таблицы
+  QStringList templateTableLabel;
+  int ret = tableGetLabels(tableIndex, start, templateTableLabel);
+if(ret < 0)
+    return -4;
   int tabColumns = templateTableLabel.count();//столбцы
   QList<int> containerIndex;
   for(int i = 0; i < tabColumns; i++)
@@ -416,8 +446,8 @@ int ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabel
           //ежели элемент не найден в таблице меток
           if(containerIndex[j-1] == -1)
             continue;
-          if( tableDat_in[j].count() < j)
-            continue;
+          //if( tableDat_in[j].count() < j)
+            //continue;
           //b = tableDat_in[i].count();
           QAxObject* cell = table->querySubObject("Cell(const QVariant& , const QVariant&)",i + start-1 , j);
           if( cell == NULL)
@@ -429,7 +459,8 @@ int ActiveWord::tableFill(QList<QStringList> tableDat_in, QStringList tableLabel
             if( sel == NULL)
               return -5;
             sel->dynamicCall("Cut()");
-            sel->dynamicCall("TypeText(Text)", tableDat_in[i-1][containerIndex[j-1]]);
+            QString s = tableDat_in[i-1][containerIndex[j-1]];
+            sel->dynamicCall("TypeText(Text)", QVariant(s));
             delete sel;
             delete cell;
             continue;

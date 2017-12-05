@@ -173,9 +173,13 @@ QVariant ActiveExcel::sheetName(){
 
 
 
-void ActiveExcel::sheetCellColorInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col){
+int ActiveExcel::sheetCellColorInsert(QAxObject* sheet, QVariant& data, QVariant row, QVariant col){
    QAxObject* cell = sheet->querySubObject("Cells(QVariant,QVariant)", row , col);
+   if(cell == NULL)
+       return -1;
    QAxObject* interior = cell->querySubObject("Interior");
+   if( interior == NULL)
+       return -2;
    data = interior->property("Color");
    delete interior;
    delete cell;
