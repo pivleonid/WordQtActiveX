@@ -1,3 +1,6 @@
+#ifndef ACTIVEEXCEL_H
+#define ACTIVEEXCEL_H
+
 /*==================================================================*/
 /*!
 \brief Класс для работы с excel'овскими документами при помощи ActiveQt.
@@ -27,43 +30,32 @@ QVariant name = excel.sheetName();
 //по этому имени получаем указатель на лист
 QAxObject* sheet = excel.documentSheetActive(name);
 Зная этот указатель возможна дальнейшая работа с excel документом
-\version 1.0
+\version 2.0
 */
 /*==================================================================*/
-
 
 #include "qdebug.h"
 #include "qaxobject.h"
 #include "QStringList"
 
-
-#ifndef ACTIVEEXCEL_H
-#define ACTIVEEXCEL_H
-
-
 class ActiveExcel
 {
-  QAxObject* excelApplication_; ///< файл ворда
-  QAxObject* worcbooks_;        ///< Коллекция книг
-  QAxObject* sheets_;           ///< Коллекция листов
-  QAxObject* workSheet_;
-  QAxObject* workSheets_;
-  bool flagClose;
-  bool flagConnect;
-  bool flagWorkBooks;
+  QAxObject* m_excelApplication; ///< файл excel
+  QAxObject* m_workbooks;        ///< Коллекция книг
+  QAxObject* m_sheets;           ///< Коллекция листов
+  QAxObject* m_workSheet;
+  bool       m_flagClose;
+  bool       m_flagConnect;
+  bool       m_flagWorkBooks;
 public:
   ActiveExcel();
   /*==================================================================*/
   /*!  \brief
    Проверка работы excel
   */
-  bool excelConnect(){
-    return (flagConnect & flagWorkBooks);
-  }
+  bool excelConnect();
 
-  void setVisible(bool a){
-      excelApplication_->setProperty("Visible", a);
-  }
+  void setVisible(bool property);
 
   ~ActiveExcel();
 
@@ -80,7 +72,7 @@ public:
   /*==================================================================*/
   /*!  \brief
    Возвращает указатель на созданный лист
-   По умолчанию создается Лист1, Лист2 ...
+   По умолчанию создается "Лист1", "Лист2" и т.д.
   */
   QAxObject* workbookAddSheet( QVariant sheetName = "" ); /*!< [in] имя листа   */
   /*==================================================================*/
@@ -106,7 +98,7 @@ public:
   /*!  \brief
    Установка значения в ячейку
   */
-  void sheetCellPaste(QAxObject* sheet,/*!< [in] указатель листа  */
+  bool sheetCellPaste(QAxObject* sheet,/*!< [in] указатель листа  */
                       QVariant string, /*!< [in] строка для вставки  */
                       QVariant row, QVariant col /*!< [in] строка и столбец ячейки  */
                       );
